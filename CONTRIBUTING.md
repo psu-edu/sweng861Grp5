@@ -14,6 +14,21 @@ Please follow these guidelines to ensure a collaborative and consistent developm
 
 ## Project Setup
 
+Due to the technical requirements and scope of this project, Visual Studio Community 2022 has been chosen as the IDE for this project due to its support of Python and React at no additional cost to developers.
+Visual Studio Installation Steps
+
+1. Download Visual Studio 2022 Community Edition from <https://visualstudio.microsoft.com/>
+Select the following workloads to download with the initial installation:
+
+- Python Development
+- Python Web Support
+- ASP.NET Web Development
+- Node.JS
+
+2. Sign into Visual Studio using PSU email.
+3. Clone project repository from GitHub. Link: psu-edu/sweng861Grp5: Fall 2024 SWENG 861 Group 5 (github.com)
+4. Download preferred extensions to enhance developer workflow.
+
 ## Commit Message Guidelines
 
 We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification to standardize commit messages.
@@ -31,7 +46,7 @@ Types include:
 ## Branching Strategy
 
 We follow a [Trunk-based Branching Strategy](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development)
-When creating a new branch off of main (the trunk), prefix it with feat/ for features, fix/ for bugfixes, docs/, or chore/ for other contributions.
+In order to accommodate scaling up the project as it grows over time, we will be implementing a Scaled Trunk-Based Development approach within our GitHub repository. This will consist of a main branch (trunk) that will act as the continuous development branch . New features that have been outlined in Epics/Stories that have been agreed upon by the team will be developed in downstream feature branches adhering to the following format: feature/<new-capability>. After sufficient review and approval by the team, these feature branches will be merged back into the main branch. Lastly, versioned release branches will be cut from the main branch using semantic versioning standards. i.e release/1.0.0.
 
 ## Testing Requirements
 
