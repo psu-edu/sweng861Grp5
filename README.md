@@ -19,3 +19,6 @@ Create a fitness tracking dashboard compatible with a variety of wearable device
 ## Product Scope
 
 The product will be a web application. The scope of our app includes user registration, group formation, leaderboards, goal tracking, the display of health data for an individual, and public display of data for groups. We would like to utilize a pub-sub pattern to decouple the application’s services and allow for further evolution of the architecture. We want to support a maintainable application and will accomplish this through containers. The health data will be gathered via 3rd party SDKs and authentication to the user’s tracking device will be handled through 3rd parties.
+
+Testing autolink with SCRUM-1
+
