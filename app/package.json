@@ -1,0 +1,29 @@
+{
+  "name": "bitfit",
+  "version": "1.0.0",
+  "description": "BitFit fitness goal tracking application",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "nodemon server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": ""
+  },
+  "keywords": [
+    "fitness",
+    "app",
+    "MERN"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.4"
+  }
+}
