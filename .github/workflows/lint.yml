@@ -21,6 +21,8 @@ jobs:
 
       - name: Install dependencies
         run: npm i
+        working-directory: ./app
 
       - name: Run ESLint
         run: npm run lint -- --fix
+        working-directory: ./app
