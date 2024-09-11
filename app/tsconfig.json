@@ -106,6 +106,9 @@
   ],
   "exclude": [
     "dist",
-    "node_modules"
+    "node_modules",
+    "./coverage",
+    "__tests__",
+    "jest.config.js"
   ]
 }
