@@ -15,9 +15,30 @@ services:
     networks:
       - bitfit_network
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    env_file:
+      - .env
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq/
+      - rabbit_logs:/var/log/rabbitmq
+    networks:
+      - bad_inc_net
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   mongo_data:
     driver: local
+  rabbit_data:
+  rabbit_logs:
 
 networks:
   bitfit_network:
