@@ -1,0 +1,15 @@
+{
+  "diff": true,
+  "extension": [
+    "ts"
+  ],
+  "opts": false,
+  "package": "./package.json",
+  "require": [
+    "ts-node/register"
+  ],
+  "loader": "ts-node/esm",
+  "watch-files": [
+    "test/**/*.ts"
+  ]
+}
