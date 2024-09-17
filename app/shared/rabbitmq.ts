@@ -5,7 +5,7 @@ type HandlerFn = (msg: string) => any;
 class MQConnection {
   connection!: Connection;
   channel!: Channel;
-  private connected!: Boolean;
+  private connected!: boolean;
   user: string | undefined = process.env.RABBITMQ_DEFAULT_USER;
   pass: string | undefined = process.env.RABBITMQ_DEFAULT_PASS;
 
@@ -29,9 +29,7 @@ class MQConnection {
 
     try {
       console.log(`⌛️ Connecting to Rabbit-MQ Server`);
-      this.connection = await client.connect(
-        `amqp://${RMQ_USER}:${RMQ_PASS}@${RMQ_HOST}:5672`,
-      );
+      this.connection = await client.connect(`amqp://${RMQ_USER}:${RMQ_PASS}@${RMQ_HOST}:5672`);
 
       console.log(`✅ Rabbit MQ Connected`);
 
@@ -43,7 +41,6 @@ class MQConnection {
       console.error(`❌ Not connected to MQ Server`);
     }
   }
-
   async sendToQueue(queue: string, message: any) {
     try {
       if (!this.channel) {
@@ -59,7 +56,7 @@ class MQConnection {
 
   async consume(handleIncomingNotification: HandlerFn, queue: string) {
     await this.channel.assertQueue(queue, {
-      durable: true,
+      durable: true
     });
 
     this.channel.consume(
@@ -74,8 +71,8 @@ class MQConnection {
         }
       },
       {
-        noAck: false,
-      },
+        noAck: false
+      }
     );
   }
 }
