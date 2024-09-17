@@ -5,7 +5,7 @@ const colors = {
   warn: "yellow",
   info: "green",
   http: "blue",
-  debug: "white",
+  debug: "white"
 };
 
 winston.addColors(colors);
@@ -16,26 +16,24 @@ const appVersion = process.env.npm_package_version;
 const format = combine(
   colorize({ all: true }),
   timestamp({
-    format: "YYYY-MM-DD hh:mm:ss A",
+    format: "YYYY-MM-DD hh:mm:ss A"
   }),
   align(),
   json(),
-  printf((info) =>
-    `[${info.timestamp}] v: ${appVersion} ${info.level}: ${info.message}`
-  ),
+  printf((info) => `[${info.timestamp}] v: ${appVersion} ${info.level}: ${info.message}`)
 );
 
 const transports = [
   new winston.transports.Console(),
   new winston.transports.File({
     filename: "logs/error.log",
-    level: "error",
+    level: "error"
   }),
-  new winston.transports.File({ filename: "logs/all.log" }),
+  new winston.transports.File({ filename: "logs/all.log" })
 ];
 
 export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
   format: format,
-  transports: transports,
+  transports: transports
 });
