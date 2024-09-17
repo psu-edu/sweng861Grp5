@@ -1,0 +1,22 @@
+{
+  "name": "leaderboard",
+  "version": "1.0.0",
+  "description": "Leaderboard for all users to track progress",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psu-edu/sweng861Grp5.git"
+  },
+  "author": "Race Mahoney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/psu-edu/sweng861Grp5/issues"
+  },
+  "homepage": "https://github.com/psu-edu/sweng861Grp5#readme",
+  "dependencies": {
+    "create-react-app": "^5.0.1"
+  }
+}
