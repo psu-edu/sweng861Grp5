@@ -34,4 +34,4 @@ jobs:
 
       - name: Run Biome Client Linter
         run: biome ci .
-        working-directory: ./app
+        working-directory: ./client
