@@ -26,3 +26,12 @@ jobs:
       - name: Run ESLint
         run: npm run lint
         working-directory: ./app
+
+      - name: Setup Biome Client Linter
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+
+      - name: Run Biome Client Linter
+        run: biome ci .
+        working-directory: ./app
