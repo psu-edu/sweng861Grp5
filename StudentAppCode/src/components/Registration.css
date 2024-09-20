@@ -1,0 +1,54 @@
+/* Registration container */
+.registration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-image: url('../components/Media/Penn State Est Date.png'); /* Ensure the path is correct */
+  background-size: 50%; /* Scale the image to 50% */
+  background-position: top left; /* Position the image in the upper left corner */
+  background-repeat: no-repeat; /* Prevent repeating */
+  background-attachment: fixed; /* Keeps the image fixed in place */
+}
+
+.registration-box {
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  padding: 40px;
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Input field styling */
+.input-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f9f9f9;
+  color: #333;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.register-btn:hover {
+  background-color: #0056b3;
+}
