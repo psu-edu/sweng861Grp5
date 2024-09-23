@@ -1,7 +1,11 @@
 import express, { Request, Response } from "express";
+import { morganMiddleware } from "./shared/middleware/morgan.middleware.ts";
+import { logger } from "./shared/utils/logger.ts";
 
 const app = express();
 const port = 8000; // Port where the server will listen
+
+app.use(morganMiddleware);
 
 // Define a simple route that responds with "Hello, World!"
 app.get("/", (req: Request, res: Response) => {
@@ -10,5 +14,5 @@ app.get("/", (req: Request, res: Response) => {
 
 // Start the Express server
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  logger.info(`Server is running at http://localhost:${port}`);
 });

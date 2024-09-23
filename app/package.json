@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/server.js",
-    "dev": "nodemon server.ts",
+    "dev": "nodemon --exec 'npm run exec'",
+    "exec": "node --loader ts-node/esm server.ts",
     "test": "mocha",
     "coverage": "nyc mocha",
     "lint": "eslint ."
@@ -24,7 +25,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongoose": "^8.6.1"
+    "mongoose": "^8.6.1",
+    "morgan": "^1.10.0",
+    "winston": "^3.14.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
@@ -33,6 +36,7 @@
     "@types/chai": "^4.3.19",
     "@types/express": "^4.17.21",
     "@types/mocha": "^10.0.8",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^22.5.4",
     "chai": "^5.1.1",
     "eslint": "^8.57.0",
