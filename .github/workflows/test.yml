@@ -31,3 +31,17 @@ jobs:
         with:
           name: coverage-report
           path: ./app/coverage/
+
+      - name: Install client dependencies
+        run: npm install
+        working-directory: ./client
+
+      - name: Run client Tests
+        run: npm test -- --passWithNoTests
+        working-directory: ./client
+
+      - name: Upload client coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-coverage-report
+          path: ./client/coverage/
