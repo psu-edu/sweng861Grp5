@@ -1,10 +1,22 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteError,
+} from "@remix-run/react";
 
 import { GlobalPendingIndicator } from "@/components/global-pending-indicator";
 import { Header } from "@/components/header";
-import { ThemeSwitcherSafeHTML, ThemeSwitcherScript } from "@/components/theme-switcher";
+import {
+  ThemeSwitcherSafeHTML,
+  ThemeSwitcherScript,
+} from "@/components/theme-switcher";
 
 import "./globals.css";
+import { Toaster } from "./components/ui/toaster";
 
 function App({ children }: { children: React.ReactNode }) {
   return (
@@ -22,6 +34,7 @@ function App({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <Toaster />
       </body>
     </ThemeSwitcherSafeHTML>
   );

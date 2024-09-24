@@ -53,7 +53,7 @@ services:
       - rabbit_data:/var/lib/rabbitmq/
       - rabbit_logs:/var/log/rabbitmq
     networks:
-      - bad_inc_net
+      - bitfit_network
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 10s
