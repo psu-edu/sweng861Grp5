@@ -1,74 +1,55 @@
 {
-  "name": "bitfit",
-  "version": "1.0.0",
-  "description": "BitFit fitness goal tracking application",
-  "main": "server.ts",
-  "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "start": "node ./dist/server.js",
-    "dev": "nodemon --exec 'npm run exec'",
-    "exec": "node --loader ts-node/esm server.ts",
-    "test": "mocha",
-    "coverage": "nyc mocha",
-    "lint": "eslint ."
-  },
-  "keywords": [
-    "fitness",
-    "app",
-    "MERN"
-  ],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "amqplib": "^0.10.4",
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "mongoose": "^8.6.3",
-    "morgan": "^1.10.0",
-    "winston": "^3.14.2"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.10.0",
-    "@istanbuljs/nyc-config-typescript": "^1.0.2",
-    "@types/amqplib": "^0.10.5",
-    "@types/chai": "^4.3.19",
-    "@types/express": "^4.17.21",
-    "@types/mocha": "^10.0.8",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "^22.5.4",
-    "chai": "^5.1.1",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "globals": "^15.9.0",
-    "mocha": "^10.7.3",
-    "nodemon": "^3.1.4",
-    "nyc": "^17.0.0",
-    "prettier": "^3.3.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.5.0"
-  },
-  "nyc": {
-    "extends": "@istanbuljs/nyc-config-typescript",
-    "check-coverage": true,
-    "all": true,
-    "include": [
-      "**/!(*.test.*).ts"
-    ],
-    "exclude": [
-      "test/**/*.*"
-    ],
-    "reporter": [
-      "html",
-      "lcov",
-      "text",
-      "text-summary"
-    ],
-    "report-dir": "coverage"
-  }
+	"name": "bitfit",
+	"version": "1.0.0",
+	"description": "BitFit fitness goal tracking application",
+	"main": "server.js",
+	"scripts": {
+		"build": "npx tsc",
+		"start": "node dist/server.js",
+		"dev": "nodemon",
+		"test": "mocha src/test",
+		"coverage": "nyc mocha src/test",
+		"fix": "biome check . --write",
+		"lint": "biome check ."
+	},
+	"keywords": ["fitness", "app", "MERN"],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"amqplib": "^0.10.4",
+		"bcrypt": "^5.1.1",
+		"body-parser": "^1.20.3",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"express": "^4.19.2",
+		"mongoose": "^8.6.3",
+		"morgan": "^1.10.0",
+		"winston": "^3.14.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.2",
+		"@istanbuljs/nyc-config-typescript": "^1.0.2",
+		"@types/amqplib": "^0.10.5",
+		"@types/chai": "^4.3.19",
+		"@types/express": "^4.17.21",
+		"@types/mocha": "^10.0.8",
+		"@types/morgan": "^1.9.9",
+		"@types/node": "^22.5.4",
+		"chai": "^4.1.1",
+		"globals": "^15.9.0",
+		"mocha": "^10.7.3",
+		"nodemon": "^3.1.4",
+		"nyc": "^17.0.0",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.6.2"
+	},
+	"nyc": {
+		"extends": "@istanbuljs/nyc-config-typescript",
+		"check-coverage": true,
+		"all": true,
+		"include": ["**/!(*.test.*).ts"],
+		"exclude": ["src/test/**/*.*"],
+		"reporter": ["html", "lcov", "text", "text-summary"],
+		"report-dir": "coverage"
+	}
 }

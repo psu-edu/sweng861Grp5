@@ -1,8 +1,10 @@
 *.env
 *.env.local
 
-**/node_modules/**
-**/dist/**
+node_modules
+dist
 coverage
 .nyc_output/
 logs/
+
+.DS_Store
