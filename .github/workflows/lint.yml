@@ -19,19 +19,15 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install dependencies
-        run: npm i
-        working-directory: ./app
-
-      - name: Run ESLint
-        run: npm run lint
-        working-directory: ./app
-
-      - name: Setup Biome Client Linter
+      - name: Setup Biome Linter
         uses: biomejs/setup-biome@v2
         with:
           version: latest
 
-      - name: Run Biome Client Linter
+      - name: Run Linter
+        run: biome ci .
+        working-directory: ./app
+
+      - name: Run Client Linter
         run: biome ci .
         working-directory: ./client
