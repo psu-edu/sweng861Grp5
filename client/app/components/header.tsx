@@ -3,10 +3,7 @@ import { Link } from "@remix-run/react";
 import * as React from "react";
 import { useHydrated } from "remix-utils/use-hydrated";
 
-import {
-  getTheme,
-  setTheme as setSystemTheme,
-} from "@/components/theme-switcher";
+import { getTheme, setTheme as setSystemTheme } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,30 +33,11 @@ export function Header() {
           <span className="text-lg font-bold">BitFit</span>
         </Link>
       </div>
-      <Button
-        onClick={() =>
-          toast({
-            title: "Scheduled: Catch up ",
-            description: "Friday, February 10, 2023 at 5:57 PM",
-          })}
-      >
-        Helloo
-      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            className="w-10 h-10 rounded-full border"
-            size="icon"
-            variant="ghost"
-          >
+          <Button className="w-10 h-10 rounded-full border" size="icon" variant="ghost">
             <span className="sr-only">Theme selector</span>
-            {!hydrated
-              ? null
-              : theme === "dark"
-                ? <MoonIcon />
-                : theme === "light"
-                  ? <SunIcon />
-                  : <LaptopIcon />}
+            {!hydrated ? null : theme === "dark" ? <MoonIcon /> : theme === "light" ? <SunIcon /> : <LaptopIcon />}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="mt-2">
@@ -76,12 +54,7 @@ export function Header() {
             </button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <button
-              type="button"
-              className="w-full"
-              onClick={() => setTheme("dark")}
-              aria-selected={theme === "dark"}
-            >
+            <button type="button" className="w-full" onClick={() => setTheme("dark")} aria-selected={theme === "dark"}>
               Dark
             </button>
           </DropdownMenuItem>
