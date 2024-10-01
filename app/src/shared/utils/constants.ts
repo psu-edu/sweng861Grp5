@@ -5,11 +5,10 @@ const HOST = process.env.DB_HOST || "localhost";
 const PORT = process.env.DB_PORT || "27017";
 
 export const mongo = {
-  NAME,
-  PASS,
-  USER,
-  HOST,
-  PORT,
-  connectionString:
-    `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${NAME}?authSource=${NAME}`,
+	NAME,
+	PASS,
+	USER,
+	HOST,
+	PORT,
+	connectionString: `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${NAME}?authSource=${NAME}`,
 };
