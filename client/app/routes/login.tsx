@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { SignUpForm } from "@/components/signup-form";
+import { LoginForm } from "@/components/login-form";
 import { title } from "@/config.shared";
 import type { MetaFunction } from "@remix-run/node";
 
@@ -8,18 +8,18 @@ export const meta: MetaFunction = () => {
     { title: title() },
     {
       name: "description",
-      content: "Welcome to BitFit!",
+      content: "Login to BitFit!",
     },
   ];
 };
 
-export default function Index() {
+export default function Login() {
   return (
     <>
       <Header />
       <main className="container prose py-8">
         <h1 className="text-5xl">BitFit</h1>
-        <SignUpForm />
+        <LoginForm />
       </main>
     </>
   );
