@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", goalRoutes);
 
-connectDB("bitfit");
+connectDB();
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   logger.error(`Global error: ${err.message}`);
