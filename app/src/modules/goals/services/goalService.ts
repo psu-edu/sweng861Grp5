@@ -1,21 +1,34 @@
+import cacheService from "../../../shared/utils/cacheService";
 import { logger } from "../../../shared/utils/logger";
+import mqConnection from "../../../shared/utils/rabbitmq";
 import type { IGoal } from "../models/goal";
 import GoalRepository from "../repositories/goalRepository";
 
 class GoalService {
   async createGoal(goalData: Partial<IGoal>): Promise<IGoal> {
-    logger.info(`Creating new goal: ${goalData.email}`);
+    logger.info(
+      `Creating new goal: ${goalData.name} with teamId: ${goalData.teamId}`,
+    );
+
+    const message = {
+      action: "GoalCreated",
+      goal: goalData,
+    };
+
+    mqConnection.sendToQueue(`team-${goalData.teamId}-goal-queue`, message);
+
     return await GoalRepository.create(goalData);
   }
 
   async getGoalById(id: string): Promise<IGoal | null> {
     logger.info(`Retrieving goal: ${id}`);
-    return await GoalRepository.findById(id);
+    const teamId = await cacheService.getTeamIdFromCache(id);
+    return await GoalRepository.findById(id, teamId!);
   }
 
-  async getGoals(): Promise<IGoal[] | null> {
-    logger.info(`Retrieving goals`);
-    return await GoalRepository.findAll();
+  async getGoals(teamId: string): Promise<IGoal[] | null> {
+    logger.info("Retrieving goals");
+    return await GoalRepository.findAll(teamId);
   }
 
   async updateGoalById(
@@ -23,12 +36,32 @@ class GoalService {
     data: Partial<IGoal>,
   ): Promise<IGoal | null> {
     logger.info(`Updating goal: ${id}`);
+
+    const message = {
+      action: "GoalUpdated",
+      goal: data,
+    };
+
+    mqConnection.sendToQueue(`team-${data.teamId}-goal-queue`, message);
+
     return await GoalRepository.updateById(id, data);
   }
 
   async deleteGoalById(id: string): Promise<boolean | null> {
     logger.info(`Deleting goal: ${id}`);
-    return await GoalRepository.deleteById(id);
+
+    const teamId = await cacheService.getTeamIdFromCache(id);
+
+    const goalData = await GoalRepository.findById(id, teamId!);
+
+    const message = {
+      action: "GoalDeleted",
+      goal: goalData,
+    };
+
+    mqConnection.sendToQueue(`team-${goalData!.teamId}-goal-queue`, message);
+
+    return await GoalRepository.deleteById(id, teamId!);
   }
 }
 

@@ -3,9 +3,14 @@ import mongoose from "mongoose";
 import { logger } from "../../../shared/utils/logger";
 import type { IGoal } from "../models/goal";
 import GoalService from "../services/goalService";
+import { validationResult } from "express-validator";
 
 class GoalController {
   async createGoal(req: Request, res: Response): Promise<void> {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+    }
     try {
       logger.info("Goal signup request received.");
       const goal: IGoal = await GoalService.createGoal(req.body);
@@ -41,15 +46,16 @@ class GoalController {
   }
 
   async getGoals(req: Request, res: Response): Promise<void> {
+    const teamId = req.params.teamId;
     try {
       logger.info("Goals get request received.");
-      const goals = await GoalService.getGoals();
+      const goals = await GoalService.getGoals(teamId);
       if (!goals) {
-        logger.warn(`No goals found`);
+        logger.warn("No goals found");
         res.status(404).json({ error: "No Goals Found" });
       } else {
         res.status(200).json(goals);
-        logger.info(`Goals successfully retrieved`);
+        logger.info("Goals successfully retrieved");
       }
     } catch (error: any) {
       logger.error(`Error retrieving Goals: ${error.message}`);
@@ -60,6 +66,11 @@ class GoalController {
   async updateGoal(req: Request, res: Response): Promise<void> {
     const goalId = req.params.id;
     const goalData = req.body;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+    }
 
     if (!mongoose.Types.ObjectId.isValid(goalId)) {
       res.status(400).json({ message: "Invalid Goal ID format" });
@@ -96,7 +107,7 @@ class GoalController {
         res.status(404).json({ error: "No Goal Found" });
       } else {
         res.status(203).json();
-        logger.info(`Goal successfully deleted`);
+        logger.info("Goal successfully deleted");
       }
     } catch (error: any) {
       logger.error(`Error deleting Goal: ${error.message}`);

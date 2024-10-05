@@ -14,9 +14,9 @@ class GoalRepository {
     }
   }
 
-  async findById(id: string): Promise<IGoal | null> {
+  async findById(id: string, teamId: string): Promise<IGoal | null> {
     try {
-      const goal = await Goal.findOne({ _id: id });
+      const goal = await Goal.findOne({ _id: id, teamId });
       if (goal) {
         logger.info(`Goal found by id: ${id}`);
       } else {
@@ -29,13 +29,13 @@ class GoalRepository {
     }
   }
 
-  async findAll(): Promise<IGoal[] | null> {
+  async findAll(teamId: string): Promise<IGoal[] | null> {
     try {
-      const goal = await Goal.find({});
+      const goal = await Goal.find({ teamId });
       if (goal) {
-        logger.info(`Goals found`);
+        logger.info("Goals found");
       } else {
-        logger.warn(`No goals found`);
+        logger.warn("No goals found");
       }
       return goal;
     } catch (error: any) {
@@ -50,7 +50,7 @@ class GoalRepository {
   ): Promise<IGoal | null> {
     try {
       const goal = await Goal.findByIdAndUpdate(
-        id,
+        { id, teamId: updateData.teamId },
         { $set: updateData },
         { new: true },
       );
@@ -66,11 +66,11 @@ class GoalRepository {
     }
   }
 
-  async deleteById(id: string): Promise<boolean | null> {
+  async deleteById(id: string, teamId: string): Promise<boolean | null> {
     try {
-      const goal = await Goal.deleteOne({ _id: id });
+      const goal = await Goal.deleteOne({ _id: id, teamId });
       if (goal.deletedCount > 0) {
-        logger.info(`Goal deleted`);
+        logger.info("Goal deleted");
       } else {
         logger.warn(`No goal found for id: ${id}`);
       }

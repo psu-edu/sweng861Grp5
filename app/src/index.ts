@@ -7,13 +7,19 @@ import express, {
   type Request,
   type Response,
 } from "express";
+import cors from "cors";
 import session from "express-session";
 import goalRoutes from "./modules/goals/routes/goalRoutes";
 import { morganMiddleware } from "./shared/middleware/morgan.middleware";
 import connectDB from "./shared/utils/db";
 import { logger } from "./shared/utils/logger";
+import mqConnection from "./shared/utils/rabbitmq";
+import CacheService from "./shared/utils/cacheService";
+
 const app: Express = express();
 const port = process.env.PORT || 8080;
+
+app.use(cors());
 
 app.use(
   session({
@@ -29,7 +35,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", goalRoutes);
 
-connectDB("bitfit");
+connectDB();
+
+(async function MqBootstrap() {
+  await mqConnection.connect();
+
+  CacheService;
+  logger.info("CacheService started listening to events");
+})();
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   logger.error(`Global error: ${err.message}`);

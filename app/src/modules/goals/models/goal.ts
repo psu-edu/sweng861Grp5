@@ -2,15 +2,19 @@ import mongoose, { type Document, Schema } from "mongoose";
 
 export interface IGoal extends Document {
   name: string;
-  email: string;
-  password: string;
+  date: Date;
+  goalInt: number;
+  teamId: string;
 }
 
 const goalSchema = new Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true, unique: true },
+  date: { type: Date, required: true },
+  goalInt: { type: Number, required: true },
+  teamId: { type: String, required: true },
 });
+
+goalSchema.index({ teamId: 1 });
 
 const Goal = mongoose.model<IGoal>("Goal", goalSchema);
 
