@@ -9,15 +9,18 @@ import express, {
 	type Response,
 } from "express";
 import session from "express-session";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 import goalRoutes from "./modules/goals/routes/goalRoutes";
 import { morganMiddleware } from "./shared/middleware/morgan.middleware";
 import CacheService from "./shared/utils/cacheService";
+import { application } from "./shared/utils/constants";
 import connectDB from "./shared/utils/db";
 import { logger } from "./shared/utils/logger";
 import mqConnection from "./shared/utils/rabbitmq";
+import { swaggerOptions } from "./shared/utils/swaggerDef";
 
 const app: Express = express();
-const port = process.env.PORT || 8080;
 
 app.use(cors());
 
@@ -32,6 +35,14 @@ app.use(
 app.use(morganMiddleware);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+if (process.env.NODE_ENV !== "production") {
+	const swaggerDocs = swaggerJsDoc(swaggerOptions());
+	app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+	console.log("✅ Swagger documentation enabled at /docs");
+} else {
+	console.log("🚫 Swagger documentation disabled in production");
+}
 
 app.use("/", goalRoutes);
 
@@ -49,6 +60,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 	res.status(500).json({ error: err.message });
 });
 
-app.listen(port, () => {
-	logger.info(`[server]: Server is running at http://localhost:${port}`);
+app.listen(application.PORT, () => {
+	logger.info(
+		`[server]: Server is running at http://localhost:${application.PORT}`,
+	);
 });

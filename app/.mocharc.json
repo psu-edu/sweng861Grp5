@@ -4,5 +4,5 @@
 	"opts": false,
 	"package": "./package.json",
 	"require": ["ts-node/register"],
-	"watch-files": ["src/test/*.ts"]
+	"watch-files": ["src/**/*.spec.ts"]
 }

@@ -2,9 +2,13 @@ import { logger } from "../../../shared/utils/logger";
 import Goal, { type IGoal } from "../models/goal";
 
 class GoalRepository {
-	async create(goalData: Partial<IGoal>): Promise<IGoal> {
+	async create(goalData: Partial<IGoal>, teamId: string): Promise<IGoal> {
+		const data = {
+			...goalData,
+			teamId,
+		};
 		try {
-			const goal = new Goal(goalData);
+			const goal = new Goal(data);
 			const savedGoal = await goal.save();
 			logger.info(`Goal created: ${savedGoal.name}`);
 			return savedGoal;
@@ -46,11 +50,12 @@ class GoalRepository {
 
 	async updateById(
 		id: string,
+		teamId: string,
 		updateData: Partial<IGoal>,
 	): Promise<IGoal | null> {
 		try {
 			const goal = await Goal.findByIdAndUpdate(
-				{ id, teamId: updateData.teamId },
+				{ id, teamId },
 				{ $set: updateData },
 				{ new: true },
 			);

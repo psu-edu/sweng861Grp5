@@ -5,54 +5,70 @@ import type { IGoal } from "../models/goal";
 import GoalRepository from "../repositories/goalRepository";
 
 class GoalService {
-	async createGoal(goalData: Partial<IGoal>): Promise<IGoal> {
-		logger.info(
-			`Creating new goal: ${goalData.name} with teamId: ${goalData.teamId}`,
-		);
+	async createGoal(goalData: Partial<IGoal>, userId: string): Promise<IGoal> {
+		const teamId = await cacheService.getTeamIdFromCache(userId);
+		logger.info(`Creating new goal: ${goalData.name} with teamId: ${teamId}`);
+
+		const data = {
+			...goalData,
+			createdAt: new Date(),
+			userId,
+			teamId: teamId!,
+		};
 
 		const message = {
 			action: "GoalCreated",
-			goal: goalData,
+			goal: data,
 		};
 
-		mqConnection.sendToQueue(`team-${goalData.teamId}-goal-queue`, message);
+		mqConnection.sendToQueue(`team-${teamId}-goal-queue`, message);
 
-		return await GoalRepository.create(goalData);
+		return await GoalRepository.create(data, teamId!);
 	}
 
-	async getGoalById(id: string): Promise<IGoal | null> {
+	async getGoalById(id: string, userId: string): Promise<IGoal | null> {
 		logger.info(`Retrieving goal: ${id}`);
-		const teamId = await cacheService.getTeamIdFromCache(id);
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		const teamId = await cacheService.getTeamIdFromCache(userId);
 		return await GoalRepository.findById(id, teamId!);
 	}
 
-	async getGoals(teamId: string): Promise<IGoal[] | null> {
+	async getGoals(userId: string): Promise<IGoal[] | null> {
+		const teamId = await cacheService.getTeamIdFromCache(userId);
+
 		logger.info("Retrieving goals");
-		return await GoalRepository.findAll(teamId);
+		return await GoalRepository.findAll(teamId!);
 	}
 
 	async updateGoalById(
 		id: string,
+		userId: string,
 		data: Partial<IGoal>,
 	): Promise<IGoal | null> {
 		logger.info(`Updating goal: ${id}`);
 
-		const message = {
-			action: "GoalUpdated",
-			goal: data,
+		const teamId = await cacheService.getTeamIdFromCache(userId);
+
+		const goalData = {
+			...data,
+			updatedAt: new Date(),
+			userId,
+			teamId: teamId!,
 		};
 
-		mqConnection.sendToQueue(`team-${data.teamId}-goal-queue`, message);
+		const message = {
+			action: "GoalUpdated",
+			goal: goalData,
+		};
 
-		return await GoalRepository.updateById(id, data);
+		mqConnection.sendToQueue(`team-${teamId!}-goal-queue`, message);
+
+		return await GoalRepository.updateById(id, teamId!, goalData);
 	}
 
-	async deleteGoalById(id: string): Promise<boolean | null> {
+	async deleteGoalById(id: string, userId: string): Promise<boolean | null> {
 		logger.info(`Deleting goal: ${id}`);
 
-		const teamId = await cacheService.getTeamIdFromCache(id);
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		const teamId = await cacheService.getTeamIdFromCache(userId);
 		const goalData = await GoalRepository.findById(id, teamId!);
 
 		const message = {
@@ -60,8 +76,7 @@ class GoalService {
 			goal: goalData,
 		};
 
-		mqConnection.sendToQueue(`team-${goalData?.teamId}-goal-queue`, message);
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		mqConnection.sendToQueue(`team-${teamId}-goal-queue`, message);
 		return await GoalRepository.deleteById(id, teamId!);
 	}
 }

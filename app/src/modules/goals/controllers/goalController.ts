@@ -13,7 +13,7 @@ class GoalController {
 		}
 		try {
 			logger.info("Goal signup request received.");
-			const goal: IGoal = await GoalService.createGoal(req.body);
+			const goal: IGoal = await GoalService.createGoal(req.body, req.userId!);
 			res.status(201).json(goal);
 			logger.info(`Goal successfully created: ${goal.name}`);
 		} catch (error: any) {
@@ -31,7 +31,7 @@ class GoalController {
 
 		try {
 			logger.info("Goal get profile request received.");
-			const goal = await GoalService.getGoalById(goalId);
+			const goal = await GoalService.getGoalById(goalId, req.userId!);
 			if (!goal) {
 				logger.warn(`Goal not found with ${req.params.id}`);
 				res.status(404).json({ error: "No Goal Found" });
@@ -46,10 +46,9 @@ class GoalController {
 	}
 
 	async getGoals(req: Request, res: Response): Promise<void> {
-		const teamId = req.params.teamId;
 		try {
 			logger.info("Goals get request received.");
-			const goals = await GoalService.getGoals(teamId);
+			const goals = await GoalService.getGoals(req.userId!);
 			if (!goals) {
 				logger.warn("No goals found");
 				res.status(404).json({ error: "No Goals Found" });
@@ -78,7 +77,11 @@ class GoalController {
 
 		try {
 			logger.info("Goal update request received.");
-			const goal = await GoalService.updateGoalById(goalId, goalData);
+			const goal = await GoalService.updateGoalById(
+				goalId,
+				req.userId!,
+				goalData,
+			);
 			if (!goal) {
 				logger.warn(`Goal not found with ${req.params.id}`);
 				res.status(404).json({ error: "No Goal Found" });
@@ -101,7 +104,7 @@ class GoalController {
 
 		try {
 			logger.info("Goal delete request received.");
-			const goal = await GoalService.deleteGoalById(goalId);
+			const goal = await GoalService.deleteGoalById(goalId, req.userId!);
 			if (!goal) {
 				logger.warn(`Goal not found with ${req.params.id}`);
 				res.status(404).json({ error: "No Goal Found" });

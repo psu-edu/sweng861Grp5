@@ -34,3 +34,9 @@ export const redis = {
 	PORT: RD_PORT,
 	connectionString: `redis://${RD_HOST}:${RD_PORT}`,
 };
+
+const APP_PORT = process.env.PORT || 8080;
+
+export const application = {
+	PORT: APP_PORT,
+};
