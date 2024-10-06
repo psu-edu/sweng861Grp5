@@ -15,7 +15,7 @@ export const mongo = {
     PASS,
     HOST,
     PORT,
-    usersConnectionString: `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${USERS_DB}?authSource=${USERS_DB}`,
-    leaderboardsConnectionString: `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${LEADERBOARDS_DB}?authSource=${LEADERBOARDS_DB}`,
-    groupsConnectionString: `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${GROUPS_DB}?authSource=${GROUPS_DB}`,
+    usersConnectionString: `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${USERS_DB}?authSource=admin`,
+    leaderboardsConnectionString: `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${LEADERBOARDS_DB}?authSource=admin`,
+    groupsConnectionString: `mongodb://${USER}:${PASS}@${HOST}:${PORT}/${GROUPS_DB}?authSource=admin`,
 };
