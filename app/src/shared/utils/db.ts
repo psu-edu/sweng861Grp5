@@ -1,22 +1,29 @@
-import mongoose from "mongoose";
-import { mongo } from "./constants";
+import mongoose, { Connection } from "mongoose";
 import { logger } from "./logger";
+import { mongo } from "./constants";
 
-export default function connectDB() {
+export default function connectDB(connectionString: string): Connection {
+    let dbConnection: Connection;
+
     try {
-        mongoose.connect(mongo.connectionString);
+        dbConnection = mongoose.createConnection(connectionString);
     } catch (err: any) {
         logger.error(err.message);
         process.exit(1);
     }
-    const dbConnection = mongoose.connection;
-    dbConnection.once("open", (_) => {
-        logger.info(`Database connected: ${mongo.connectionString}`);
+
+    dbConnection.once("open", () => {
+        logger.info(`Database connected: ${connectionString}`);
     });
 
     dbConnection.on("error", (err) => {
-        logger.error(`String ${mongo.connectionString}`);
+        logger.error(`String ${connectionString}`);
         logger.error(`connection error: ${err}`);
     });
-    return;
+
+    return dbConnection;
 };
+
+export const usersDB = connectDB(mongo.usersConnectionString);
+export const leaderboardsDB = connectDB(mongo.leaderboardsConnectionString);
+export const groupsDB = connectDB(mongo.groupsConnectionString);

@@ -37,4 +37,4 @@ RUN npm run build
 USER node
 
 # Run the application.
-CMD node dist/server.js
+CMD node dist/index.js

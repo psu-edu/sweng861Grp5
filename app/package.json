@@ -5,7 +5,7 @@
 	"main": "index.ts",
 	"scripts": {
 		"build": "npx tsc",
-		"start": "node dist/server.js",
+		"start": "node dist/index.js",
 		"dev": "nodemon",
 		"test": "mocha src/test",
 		"coverage": "nyc mocha src/test",
@@ -26,6 +26,7 @@
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
+		"express-basic-auth": "^1.2.1",
 		"express-session": "^1.18.0",
 		"express-validator": "^7.2.0",
 		"mongoose": "^8.7.0",
