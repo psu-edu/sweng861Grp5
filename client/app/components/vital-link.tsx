@@ -48,7 +48,7 @@ export const LinkButton: React.FC<{ userID: string }> = ({ userID }) => {
   console.log(error);
 
   return (
-    <Button onClick={handleVitalOpen} disabled={userID ? false : true}>
+    <Button onClick={handleVitalOpen} disabled={!userID}>
       {isLoading || !ready ? "Loading..." : "Connect"}
     </Button>
   );
