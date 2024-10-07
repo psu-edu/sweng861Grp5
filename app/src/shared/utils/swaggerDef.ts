@@ -39,6 +39,18 @@ export const swaggerOptions = (
 						},
 					},
 				},
+				securitySchemes: {
+					BearerAuth: {
+						type: "http",
+						scheme: "bearer",
+						bearerFormat: "JWT",
+					},
+				},
+				security: [
+					{
+						BearerAuth: [],
+					},
+				],
 			},
 		},
 		apis: ["./src/modules/**/routes/*.ts"], // Path to your API route files

@@ -17,8 +17,8 @@ class GoalService {
 		};
 
 		const message = {
-			action: "GoalCreated",
-			goal: data,
+			event: "GoalCreated",
+			data: data,
 		};
 
 		mqConnection.sendToQueue(`team-${teamId}-goal-queue`, message);
@@ -56,8 +56,8 @@ class GoalService {
 		};
 
 		const message = {
-			action: "GoalUpdated",
-			goal: goalData,
+			event: "GoalUpdated",
+			data: goalData,
 		};
 
 		mqConnection.sendToQueue(`team-${teamId!}-goal-queue`, message);
@@ -72,8 +72,8 @@ class GoalService {
 		const goalData = await GoalRepository.findById(id, teamId!);
 
 		const message = {
-			action: "GoalDeleted",
-			goal: goalData,
+			event: "GoalDeleted",
+			data: goalData,
 		};
 
 		mqConnection.sendToQueue(`team-${teamId}-goal-queue`, message);

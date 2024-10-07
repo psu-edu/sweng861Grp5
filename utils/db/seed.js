@@ -6,7 +6,7 @@ db = db.getSiblingDB("bitfit");
 db.createUser({
   user: process.env.APP_USER,
   pwd: process.env.APP_PASS,
-  roles: [{ role: "readWrite", db: "special_day" }],
+  roles: [{ role: "readWrite", db: "bitfit" }],
 });
 
 // Users db seed

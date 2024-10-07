@@ -1,5 +1,5 @@
-import redis, { type RedisClientType } from "redis";
-import { redis as redisConstants } from "./constants";
+import { type RedisClientType, createClient } from "redis";
+import { redisCache } from "./constants";
 import { logger } from "./logger";
 
 class Cache {
@@ -8,8 +8,8 @@ class Cache {
 
 	// Private constructor to ensure only one instance
 	private constructor() {
-		this.client = redis.createClient({
-			url: redisConstants.connectionString,
+		this.client = createClient({
+			url: redisCache.connectionString,
 		});
 
 		// Handle Redis errors

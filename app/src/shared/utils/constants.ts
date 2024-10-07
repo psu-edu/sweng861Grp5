@@ -29,7 +29,7 @@ export const rabbit = {
 const RD_HOST = process.env.REDIS_HOST || "localhost";
 const RD_PORT = process.env.REDIS_PORT || "";
 
-export const redis = {
+export const redisCache = {
 	HOST: RD_HOST,
 	PORT: RD_PORT,
 	connectionString: `redis://${RD_HOST}:${RD_PORT}`,

@@ -11,11 +11,11 @@ export default function connectDB() {
 	}
 	const dbConnection = mongoose.connection;
 	dbConnection.once("open", (_) => {
-		logger.info(`Database connected: ${mongo.connectionString}`);
+		logger.debug(`Database connected: ${mongo.connectionString}`);
 	});
 
 	dbConnection.on("error", (err) => {
-		logger.error(`String ${mongo.connectionString}`);
+		logger.debug(`String ${mongo.connectionString}`);
 		logger.error(`connection error: ${err}`);
 	});
 	return;

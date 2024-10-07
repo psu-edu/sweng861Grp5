@@ -1,79 +1,70 @@
 {
-  "name": "bitfit",
-  "version": "1.0.0",
-  "description": "BitFit fitness goal tracking application",
-  "main": "index.js",
-  "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon",
-    "test": "mocha src/",
-    "coverage": "nyc mocha src/",
-    "fix": "biome check . --write",
-    "lint": "biome check ."
-  },
-  "keywords": [
-    "fitness",
-    "app",
-    "MERN"
-  ],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "amqplib": "^0.10.4",
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "express-validator": "^7.2.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.6.3",
-    "morgan": "^1.10.0",
-    "redis": "^4.7.0",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1",
-    "winston": "^3.14.2"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.2",
-    "@istanbuljs/nyc-config-typescript": "^1.0.2",
-    "@types/amqplib": "^0.10.5",
-    "@types/chai": "^4.3.19",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/express-session": "^1.18.0",
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/mocha": "^10.0.8",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "^22.5.4",
-    "@types/swagger-jsdoc": "^6.0.4",
-    "@types/swagger-ui-express": "^4.1.6",
-    "chai": "^4.1.1",
-    "globals": "^15.9.0",
-    "mocha": "^10.7.3",
-    "nodemon": "^3.1.4",
-    "nyc": "^17.0.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
-  },
-  "nyc": {
-    "extends": "@istanbuljs/nyc-config-typescript",
-    "check-coverage": true,
-    "all": true,
-    "include": [
-      "**/!(*.spec.*).ts"
-    ],
-    "exclude": [
-      "src/test/**/*.*"
-    ],
-    "reporter": [
-      "html",
-      "lcov",
-      "text",
-      "text-summary"
-    ],
-    "report-dir": "coverage"
-  }
+	"name": "bitfit",
+	"version": "1.0.0",
+	"description": "BitFit fitness goal tracking application",
+	"main": "index.js",
+	"scripts": {
+		"build": "npx tsc",
+		"start": "node dist/index.js",
+		"dev": "nodemon",
+		"test": "LOG_LEVEL=silent mocha --exit",
+		"coverage": "LOG_LEVEL=silent nyc mocha --exit",
+		"fix": "biome check . --write",
+		"lint": "biome check ."
+	},
+	"keywords": ["fitness", "app", "MERN"],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"amqplib": "^0.10.4",
+		"bcrypt": "^5.1.1",
+		"body-parser": "^1.20.3",
+		"chai-http": "^4.1.1",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"express": "^4.19.2",
+		"express-session": "^1.18.0",
+		"express-validator": "^7.2.0",
+		"jsonwebtoken": "^9.0.2",
+		"mongoose": "^8.6.3",
+		"morgan": "^1.10.0",
+		"redis": "^4.7.0",
+		"sinon": "^19.0.2",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^5.0.1",
+		"winston": "^3.14.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.2",
+		"@istanbuljs/nyc-config-typescript": "^1.0.2",
+		"@types/amqplib": "^0.10.5",
+		"@types/chai": "^4.3.19",
+		"@types/chai-http": "^3.0.5",
+		"@types/cors": "^2.8.17",
+		"@types/express": "^4.17.21",
+		"@types/express-session": "^1.18.0",
+		"@types/jsonwebtoken": "^9.0.7",
+		"@types/mocha": "^10.0.8",
+		"@types/morgan": "^1.9.9",
+		"@types/node": "^22.5.4",
+		"@types/sinon": "^17.0.3",
+		"@types/swagger-jsdoc": "^6.0.4",
+		"@types/swagger-ui-express": "^4.1.6",
+		"chai": "^4.1.1",
+		"globals": "^15.9.0",
+		"mocha": "^10.7.3",
+		"nodemon": "^3.1.4",
+		"nyc": "^17.0.0",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.6.2"
+	},
+	"nyc": {
+		"extends": "@istanbuljs/nyc-config-typescript",
+		"check-coverage": true,
+		"all": true,
+		"include": ["**/!(*.spec.*).ts"],
+		"exclude": ["src/test/**/*.*"],
+		"reporter": ["html", "lcov", "text", "text-summary"],
+		"report-dir": "coverage"
+	}
 }

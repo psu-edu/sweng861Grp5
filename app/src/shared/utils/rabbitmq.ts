@@ -41,6 +41,8 @@ class MQConnection {
 				await this.connect();
 			}
 
+			await this.channel.assertQueue(queue, { durable: true });
+
 			this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
 		} catch (error) {
 			logger.error("Error sending message to queue:", error);

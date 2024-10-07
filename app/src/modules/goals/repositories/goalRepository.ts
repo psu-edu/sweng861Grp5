@@ -55,7 +55,7 @@ class GoalRepository {
 	): Promise<IGoal | null> {
 		try {
 			const goal = await Goal.findByIdAndUpdate(
-				{ id, teamId },
+				{ _id: id, teamId },
 				{ $set: updateData },
 				{ new: true },
 			);

@@ -10,9 +10,10 @@ class GoalController {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			res.status(400).json({ errors: errors.array() });
+			return;
 		}
 		try {
-			logger.info("Goal signup request received.");
+			logger.info("Goal create request received.");
 			const goal: IGoal = await GoalService.createGoal(req.body, req.userId!);
 			res.status(201).json(goal);
 			logger.info(`Goal successfully created: ${goal.name}`);
@@ -27,6 +28,7 @@ class GoalController {
 
 		if (!mongoose.Types.ObjectId.isValid(goalId)) {
 			res.status(400).json({ message: "Invalid Goal ID format" });
+			return;
 		}
 
 		try {
@@ -69,10 +71,12 @@ class GoalController {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			res.status(400).json({ errors: errors.array() });
+			return;
 		}
 
 		if (!mongoose.Types.ObjectId.isValid(goalId)) {
 			res.status(400).json({ message: "Invalid Goal ID format" });
+			return;
 		}
 
 		try {
@@ -100,6 +104,7 @@ class GoalController {
 
 		if (!mongoose.Types.ObjectId.isValid(goalId)) {
 			res.status(400).json({ message: "Invalid Goal ID format" });
+			return;
 		}
 
 		try {
@@ -109,7 +114,7 @@ class GoalController {
 				logger.warn(`Goal not found with ${req.params.id}`);
 				res.status(404).json({ error: "No Goal Found" });
 			} else {
-				res.status(203).json();
+				res.status(204).json();
 				logger.info("Goal successfully deleted");
 			}
 		} catch (error: any) {
