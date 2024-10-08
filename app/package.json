@@ -12,10 +12,15 @@
 		"fix": "biome check . --write",
 		"lint": "biome check ."
 	},
-	"keywords": ["fitness", "app", "MERN"],
+	"keywords": [
+		"fitness",
+		"app",
+		"MERN"
+	],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@tryvital/vital-node": "^3.1.82",
 		"amqplib": "^0.10.4",
 		"bcrypt": "^5.1.1",
 		"body-parser": "^1.20.3",
@@ -62,9 +67,18 @@
 		"extends": "@istanbuljs/nyc-config-typescript",
 		"check-coverage": true,
 		"all": true,
-		"include": ["**/!(*.spec.*).ts"],
-		"exclude": ["src/test/**/*.*"],
-		"reporter": ["html", "lcov", "text", "text-summary"],
+		"include": [
+			"**/!(*.spec.*).ts"
+		],
+		"exclude": [
+			"src/test/**/*.*"
+		],
+		"reporter": [
+			"html",
+			"lcov",
+			"text",
+			"text-summary"
+		],
 		"report-dir": "coverage"
 	}
 }
