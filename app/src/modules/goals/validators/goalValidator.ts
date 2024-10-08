@@ -1,15 +1,23 @@
-import { checkSchema } from "express-validator";
+import { body } from "express-validator";
 
-export const goalValidation = () =>
-  checkSchema({
-    email: {
-      errorMessage: "Invalid email",
-      isEmail: true,
-    },
-    password: {
-      isLength: {
-        options: { min: 8 },
-        errorMessage: "Password should be at least 8 chars",
-      },
-    },
-  });
+export const validateGoal = [
+	body("name")
+		.isString()
+		.withMessage("Name must be a string")
+		.notEmpty()
+		.withMessage("Name is required"),
+
+	body("goalInt")
+		.isInt()
+		.withMessage("Goal integer must be a valid integer")
+		.notEmpty()
+		.withMessage("Goal integer is required"),
+
+	body("interval")
+		.isString()
+		.withMessage("Must be a string")
+		.notEmpty()
+		.withMessage("Cannot be empty")
+		.isIn(["daily", "weekly", "monthly"])
+		.withMessage("Must be daily, weekly, or monthly"),
+];

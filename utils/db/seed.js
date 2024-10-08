@@ -1,55 +1,18 @@
 // MongoDB Seed File
 print("Start mongo seed script ##########################");
 
-db = db.getSiblingDB("admin");
+db = db.getSiblingDB("bitfit");
 
 db.createUser({
-    user: "adminUser",
-    pwd: "adminPassword",
-    roles: [
-        { role: "userAdminAnyDatabase", db: "admin" },
-        { role: "readWriteAnyDatabase", db: "admin" },
-        { role: "dbAdminAnyDatabase", db: "admin" }
-    ]
-});
-
-db = db.getSiblingDB("users");
-
-db.createUser({
-  user: "app_username",
-  pwd: "app_password",
-    roles: [{ role: "readWrite", db: "users" }],
+  user: process.env.APP_USER,
+  pwd: process.env.APP_PASS,
+  roles: [{ role: "readWrite", db: "bitfit" }],
 });
 
 // Users db seed
 db.createCollection("users");
-
-db = db.getSiblingDB("leaderboards");
-
-db.createUser({
-  user: "app_username",
-  pwd: "app_password",
-    roles: [{ role: "readWrite", db: "leaderboards" }],
-});
-
-// Create 'userEntries' collection
-db.createCollection("userEntries");
-
-// Insert example data into userEntries collection
-db.userEntries.insertMany([
-    { name: "Charlie", score: 120, date: new Date() },
-    { name: "David", score: 200, date: new Date() }
-]);
-
-print("Leaderboards database created and seeded with example data.");
-
-db.createUser({
-  user: "app_username",
-  pwd: "app_password",
-    roles: [{ role: "readWrite", db: "groups" }],
-});
-
-// Groups db seed
 db.createCollection("groups");
+db.createCollection("leaderboards");
+db.createCollection("goals");
 
 print("End mongo seed script ##########################");

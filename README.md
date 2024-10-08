@@ -22,3 +22,12 @@ The product will be a web application. The scope of our app includes user regist
 
 Testing autolink with SCRUM-1
 
+## Running the application
+
+1) Ensure you have Docker and NPM installed
+
+2) Run `sh env.sh` to copy the .env.example to a .env file in both root and app/ directory
+
+3) Run `docker compose up -d` to run the compose file and spin the app up locally
+
+a) If you want to work on the client or API, just shut down the equivalent container and spin up the dev server locally `npm run dev` after you have installed the dependencies.
