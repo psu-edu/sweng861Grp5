@@ -1,25 +1,25 @@
 import type { Request, Response } from "express";
+import { validationResult } from "express-validator";
 import mongoose from "mongoose";
 import { logger } from "../../../shared/utils/logger";
-import type { IUserEntry } from "../models/userEntry";
+import type { ILeaderboardEntry } from "../models/leaderboardEntry";
 import LeaderboardService from "../services/leaderboardService";
 
 class LeaderboardController {
-    constructor(private leaderboardService: LeaderboardService) { }
 
-    async getAllLeaderboard(req: Request, res: Response): Promise<void> {
+    async createLeaderboardEntry(req: Request, res: Response): Promise<void> {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400).json({ errors: errors.array() });
+            return;
+        }
         try {
-            logger.info("Leaderboard get request received.");
-            const userEntries = await this.leaderboardService.getAllLeaderboard();
-            if (!userEntries) {
-                logger.warn(`No user entries found in leaderboard`);
-                res.status(404).json({ error: "No User Entries Found" });
-            } else {
-                res.status(200).json(userEntries);
-                logger.info(`Leaderboard User Entries Successfully Retrieved`);
-            }
+            logger.info("New Leaderboard Entry request received.");
+            const leaderboardEntry: ILeaderboardEntry = await LeaderboardService.createLeaderboardEntry(req.body, req.userId!);
+            res.status(201).json(leaderboardEntry);
+            logger.info(`User Entry successfully created: ${leaderboardEntry.name}`);
         } catch (error: any) {
-            logger.error(`Error retrieving User Entries: ${error.message}`);
+            logger.error(`Error creating User Entry: ${error.message}`);
             res.status(400).json({ error: error.message });
         }
     }
@@ -28,83 +28,93 @@ class LeaderboardController {
         const userEntryId = req.params.id;
 
         if (!mongoose.Types.ObjectId.isValid(userEntryId)) {
-            res.status(400).json({ message: "Invalid User Entry ID format" });
+            res.status(400).json({ message: "Invalid Leaderboard Entry ID format" });
         }
 
         try {
-            logger.info("Leaderboard User Entry get request received.");
-            const userEntry = await this.leaderboardService.getLeaderboardUserEntryById(userEntryId);
-            if (!userEntry) {
-                logger.warn(`User Entry not found with ${req.params.id}`);
-                res.status(404).json({ error: "No User Entry Found in Leaderboard" });
+            logger.info("Leaderboard Entry get request received.");
+            const leaderboardEntry = await LeaderboardService.getLeaderboardEntryById(userEntryId, req.userId!);
+            if (!leaderboardEntry) {
+                logger.warn(`Leaderboard Entry not found with ${req.params.id}`);
+                res.status(404).json({ error: "No Leaderboard Entry Found in Leaderboard" });
             } else {
-                res.status(200).json(userEntry);
-                logger.info(`Goal successfully retrieved: ${userEntry.name}`);
+                res.status(200).json(leaderboardEntry);
+                logger.info(`Leaderboard Entry successfully retrieved: ${leaderboardEntry.name}`);
             }
         } catch (error: any) {
-            logger.error(`Error retrieving user Entry: ${error.message}`);
+            logger.error(`Error retrieving user Leader Entry: ${error.message}`);
             res.status(400).json({ error: error.message });
         }
     }
 
-    async createLeaderboardEntry(req: Request, res: Response): Promise<void> {
+    async getLeaderboard(req: Request, res: Response): Promise<void> {
         try {
-            logger.info("New User Entry request received.");
-            const userEntry: IUserEntry = await this.leaderboardService.createLeaderboardEntry(req.body);
-            res.status(201).json(userEntry);
-            logger.info(`User Entry successfully created: ${userEntry.name}`);
+            logger.info("Leaderboard get request received.");
+            const leaderboardEntries = await LeaderboardService.getAllLeaderboard(req.userId!);
+            if (!leaderboardEntries) {
+                logger.warn(`No leaderboard entries found in leaderboard`);
+                res.status(404).json({ error: "No User Entries Found" });
+            } else {
+                res.status(200).json(leaderboardEntries);
+                logger.info(`Leaderboard Entries Successfully Retrieved`);
+            }
         } catch (error: any) {
-            logger.error(`Error creating User Entry: ${error.message}`);
+            logger.error(`Error retrieving Leaderboard Entries: ${error.message}`);
             res.status(400).json({ error: error.message });
         }
     }
 
+    
     async updateLeaderboardEntry(req: Request, res: Response): Promise<void> {
-        const userEntryId = req.params.id;
-        const userEntryData = req.body;
+        const leaderboardEntryId = req.params.id;
+        const leaderboardEntryData = req.body;
 
-        if (!mongoose.Types.ObjectId.isValid(userEntryId)) {
-            res.status(400).json({ message: "Invalid user Entry ID format" });
+        if (!mongoose.Types.ObjectId.isValid(leaderboardEntryId)) {
+            res.status(400).json({ message: "Invalid leaderboard Entry ID format" });
         }
 
         try {
-            logger.info("User Entry for leaderboard update request received.");
-            const userEntry = await this.leaderboardService.updateLeaderboardEntry(userEntryId, userEntryData);
-            if (!userEntry) {
-                logger.warn(`User Entry not found with ${req.params.id}`);
-                res.status(404).json({ error: "No User Entry Found in Leaderboard" });
+            logger.info("Leaderboard Entry for leaderboard update request received.");
+            const leaderboardEntry = await LeaderboardService.updateLeaderboardEntry(
+                leaderboardEntryId,
+                req.userId!,
+                leaderboardEntryData
+            );
+            if (!leaderboardEntry) {
+                logger.warn(`Leaderboard Entry not found with ${req.params.id}`);
+                res.status(404).json({ error: "No Leaderboard Entry Found in Leaderboard" });
             } else {
-                res.status(200).json(userEntry);
-                logger.info(`User Entry successfully updated in Leaderboard: ${userEntry.name}`);
+                res.status(200).json(leaderboardEntry);
+                logger.info(`Leaderboard Entry successfully updated in Leaderboard: ${leaderboardEntry.name}`);
             }
         } catch (error: any) {
-            logger.error(`Error updating User Entry: ${error.message}`);
+            logger.error(`Error updating Leaderboard Entry: ${error.message}`);
             res.status(400).json({ error: error.message });
         }
     }
 
     async deleteLeaderboardEntry(req: Request, res: Response): Promise<void> {
-        const userEntryId = req.params.id;
+        const leaderboardEntryId = req.params.id;
 
-        if (!mongoose.Types.ObjectId.isValid(userEntryId)) {
-            res.status(400).json({ message: "Invalid User Entry ID format" });
+        if (!mongoose.Types.ObjectId.isValid(leaderboardEntryId)) {
+            res.status(400).json({ message: "Invalid Leaderboard Entry ID format" });
         }
 
         try {
-            logger.info("User Entry delete request received.");
-            const userEntry = await this.leaderboardService.deleteLeaderboardEntry(userEntryId);
+            logger.info("Leaderboard Entry delete request received.");
+            const userEntry = await LeaderboardService.deleteLeaderboardEntry(leaderboardEntryId, req.userId!);
             if (!userEntry) {
-                logger.warn(`User Entry not found with ${req.params.id}`);
-                res.status(404).json({ error: "No User Entry Found" });
+                logger.warn(`Leaderboard Entry not found with ${req.params.id}`);
+                res.status(404).json({ error: "No Leaderboard Entry Found" });
             } else {
                 res.status(203).json();
-                logger.info(`User Entry successfully deleted from Leaderboard`);
+                logger.info(`Leaderboard Entry successfully deleted from Leaderboard`);
             }
         } catch (error: any) {
-            logger.error(`Error deleting User Entry from Leaderboard: ${error.message}`);
+            logger.error(`Error deleting Leaderboard Entry from Leaderboard: ${error.message}`);
             res.status(400).json({ error: error.message });
         }
     }
 }
 
-export default LeaderboardController;
+export default new LeaderboardController();

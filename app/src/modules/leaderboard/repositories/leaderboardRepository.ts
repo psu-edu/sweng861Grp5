@@ -1,82 +1,92 @@
 import { Connection } from "mongoose";
 import { logger } from "../../../shared/utils/logger";
-import UserEntry, { type IUserEntry } from "../models/userEntry";
+import LeaderboardEntry, { type ILeaderboardEntry } from "../models/leaderboardEntry";
 
 class LeaderboardRepository {
-    private userEntryModel;
 
-    constructor(private connection: Connection) {
-        // Create the UserEntry model using the connection passed to the repository
-        this.userEntryModel = UserEntry(this.connection);
-    }
 
-    async create(entryData: Partial<IUserEntry>): Promise<IUserEntry> {
+    async create(entryData: Partial<ILeaderboardEntry>, teamId: string): Promise<ILeaderboardEntry> {
+        const data = {
+            ...entryData,
+            teamId,
+        }
         try {
-            logger.info(`Creating user entry with data: ${JSON.stringify(entryData)}`);
-            const userEntry = new this.userEntryModel(entryData);
-            const savedUserEntry = await userEntry.save();
-            logger.info(`User Entry ${userEntry.name} added to leaderboard`);
-            return savedUserEntry;
+            logger.info(`Creating leaderboard entry with data: ${JSON.stringify(entryData)}`);
+            const leaderboardEntry = new LeaderboardEntry(entryData);
+            const savedLeaderboardEntry = await leaderboardEntry.save();
+            logger.info(`Leaderboard Entry ${LeaderboardEntry.name} added to leaderboard`);
+            return savedLeaderboardEntry;
         } catch (error: any) {
-            logger.error(`Error creating user entry: ${entryData.name} - ${error.message}`);
+            logger.error(`Error creating leaderboard entry: ${entryData.name} - ${error.message}`);
             throw error;
         }
     }
 
-    async findById(id: string): Promise<IUserEntry | null> {
+    async findById(id: string, teamId: string): Promise<ILeaderboardEntry | null> {
         try {
-            const userEntry = this.userEntryModel.findOne({ _id: id });
-            return userEntry;
-        } catch (error: any) {
-            logger.error(`Error finding user entry by id: ${id} - ${error.message}`);
-            throw error;
-        }
-    }
-
-    async findAll(): Promise<IUserEntry[] | null> {
-        try {
-            const userEntries = await this.userEntryModel.find({});
-            if (userEntries) {
-                logger.info(`User Entries found`);
+            const leaderboardEntry = await LeaderboardEntry.findOne({ _id: id, teamId });
+            if (leaderboardEntry) {
+                logger.info(`Leaderboard Entry found by id: ${id}`);
             } else {
-                logger.warn(`No user entries found for leaderboard`);
+                logger.warn(`No Leaderboard Entry found for id: ${id}`);
             }
-            return userEntries;
+            return leaderboardEntry;
         } catch (error: any) {
-            logger.error(`Error finding user entries in leaderboard: - ${error.message}`);
+            logger.error(`Error finding leaderboard entry by id: ${id} - ${error.message}`);
             throw error;
         }
     }
 
-    async updateById(id: string, updateData: Partial<IUserEntry>,): Promise<IUserEntry | null> {
+    async findAll(teamId: string): Promise<ILeaderboardEntry[] | null> {
         try {
-            const userEntry = this.userEntryModel.findByIdAndUpdate(
-                id,
+            const entries= await LeaderboardEntry.find({ teamId });
+            if (entries) {
+                logger.info(`Entries found`);
+            } else {
+                logger.warn(`No entries found for leaderboard`);
+            }
+            return entries;
+        } catch (error: any) {
+            logger.error(`Error finding leaderboard entries: - ${error.message}`);
+            throw error;
+        }
+    }
+
+    async updateById(id: string, teamId: string, updateData: Partial<ILeaderboardEntry>,): Promise<ILeaderboardEntry | null> {
+        try {
+            const leaderboardEntry = await LeaderboardEntry.findByIdAndUpdate(
+                { _id: id, teamId },
                 { $set: updateData },
                 { new: true },
             );
-            return userEntry;
+            if (leaderboardEntry) {
+                logger.info(`Leaderboard Entry updated with id ${id}`);
+            } else {
+                logger.warn(`No leaderboard entries found`);
+            }
+
+            return leaderboardEntry;
         } catch (error: any) {
-            logger.error(`Error updating userentry by id: ${id} in leaderboard - ${error.message}`);
+            logger.error(`Error updating LeaderboardEntry by id: ${id} - ${error.message}`);
             throw error;
         }
     }
 
-    async deleteById(id: string): Promise<boolean | null> {
+    async deleteById(id: string, teamId: string): Promise<boolean | null> {
         try {
-            const userEntry = await this.userEntryModel.deleteOne({ _id: id });
-            if (userEntry.deletedCount > 0) {
-                logger.info(`User entry in leaderboared deleted`);
+            const leaderboardEntry = await LeaderboardEntry.deleteOne({ _id: id, teamId });
+            if (leaderboardEntry.deletedCount > 0) {
+                logger.info(`Leaderboard Entry deleted`);
             } else {
-                logger.warn(`No user entry found for id: ${id} in leaderboard`);
+                logger.warn(`No leaderboard entry found for id: ${id}`);
             }
-            return userEntry.deletedCount > 0;
+            return leaderboardEntry.deletedCount > 0;
         } catch (error: any) {
-            logger.error(`Error deleting user entry by id: ${id} in leaderboard - ${error.message}`);
+            logger.error(`Error deleting leaderboard entry by id: ${id} - ${error.message}`);
             throw error;
         }
     }
 } 
 
-export default LeaderboardRepository;
+export default new LeaderboardRepository();
 

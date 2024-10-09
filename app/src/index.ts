@@ -46,6 +46,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 app.use("/", goalRoutes);
+app.use("/", leaderboardRoutes);
 
 connectDB();
 
