@@ -6,7 +6,7 @@
   "scripts": {
     "build": "remix vite:build",
     "dev": "dotenv -- node ./server.js",
-    "fix": "biome check . --apply",
+    "fix": "biome check . --write",
     "lint": "biome check .",
     "test": "jest",
     "start": "cross-env NODE_ENV=production node ./server.js",
@@ -42,7 +42,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.3",
+    "@biomejs/biome": "^1.5.3",
     "@remix-run/dev": "^2.12.0",
     "@swc/core": "^1.7.26",
     "@swc/jest": "^0.2.36",

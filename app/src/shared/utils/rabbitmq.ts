@@ -1,82 +1,86 @@
 import client, { type Channel, type Connection } from "amqplib";
+import { rabbit } from "./constants";
 import { logger } from "./logger";
 
-type HandlerFn = (msg: string) => unknown;
+type HandlerFn = (event: { event: string; data: any }) => void;
 
 class MQConnection {
 	connection!: Connection;
 	channel!: Channel;
-	private connected!: boolean;
-	user: string | undefined = process.env.RABBITMQ_DEFAULT_USER;
-	pass: string | undefined = process.env.RABBITMQ_DEFAULT_PASS;
+	private connected = false;
 
-	constructor(user?: string, pass?: string) {
-		if (user !== undefined) {
-			this.user = user;
-		}
-
-		if (pass !== undefined) {
-			this.pass = pass;
-		}
-	}
-
-	async connect() {
+	async connect(retries = 5, delay = 3000) {
 		if (this.connected && this.channel) return;
 
-		const RMQ_USER = this.user;
-		const RMQ_PASS = this.pass;
-		const RMQ_HOST = process.env.RMQ_HOST;
+		let attempt = 0;
+		while (attempt < retries) {
+			try {
+				logger.info("Connecting to Rabbit-MQ Server...");
+				this.connection = await client.connect(rabbit.connectionString);
+				this.channel = await this.connection.createChannel();
 
-		try {
-			logger.info("⌛️ Connecting to Rabbit-MQ Server");
-			this.connection = await client.connect(
-				`amqp://${RMQ_USER}:${RMQ_PASS}@${RMQ_HOST}:5672`,
-			);
-
-			logger.info("✅ Rabbit MQ Connected");
-
-			this.channel = await this.connection.createChannel();
-
-			logger.info("✅ Created RabbitMQ Channel successfully");
-		} catch (error) {
-			logger.error(error);
-			logger.error("❌ Not connected to MQ Server");
+				this.connected = true;
+				logger.info("✅ Rabbit MQ Connected and channel created successfully");
+				return;
+			} catch (error) {
+				attempt++;
+				logger.error("❌ Failed to connect to RabbitMQ, retrying...", error);
+				if (attempt >= retries) {
+					logger.error("❌ All retries failed. Unable to connect to RabbitMQ.");
+					throw error;
+				}
+				await new Promise((res) => setTimeout(res, delay)); // Wait before retrying
+			}
 		}
 	}
+
+	// Send message to queue
 	async sendToQueue(queue: string, message: unknown) {
 		try {
 			if (!this.channel) {
 				await this.connect();
 			}
 
+			await this.channel.assertQueue(queue, { durable: true });
+
 			this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
 		} catch (error) {
-			logger.error(error);
+			logger.error("Error sending message to queue:", error);
 			throw error;
 		}
 	}
 
+	// Consume messages from the queue
 	async consume(handleIncomingNotification: HandlerFn, queue: string) {
-		await this.channel.assertQueue(queue, {
-			durable: true,
-		});
+		try {
+			if (!this.channel) {
+				await this.connect();
+			}
 
-		this.channel.consume(
-			queue,
-			(msg) => {
-				if (!msg) {
-					return logger.error("Invalid incoming message");
-				}
-				handleIncomingNotification(msg?.content?.toString());
-				this.channel.ack(msg);
-			},
-			{
-				noAck: false,
-			},
-		);
+			await this.channel.assertQueue(queue, { durable: true });
+
+			this.channel.consume(
+				queue,
+				(msg) => {
+					if (!msg) {
+						return logger.error("Invalid incoming message");
+					}
+					try {
+						const content = JSON.parse(msg.content.toString());
+						handleIncomingNotification(content);
+						this.channel.ack(msg);
+					} catch (error) {
+						logger.error("Error parsing message content:", error);
+					}
+				},
+				{ noAck: false },
+			);
+		} catch (error) {
+			logger.error("Error consuming messages from queue:", error);
+			throw error;
+		}
 	}
 }
 
 const mqConnection = new MQConnection();
-
 export default mqConnection;
