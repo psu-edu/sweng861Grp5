@@ -13,11 +13,16 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Bell, CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users } from "lucide-react";
 import type React from "react";
+import { useLocation } from "react-router-dom";
 
 export const description =
   "A products dashboard with a sidebar navigation and a main content area. The dashboard has a header with a search input and a user menu. The sidebar has a logo, navigation links, and a card with a call to action. The main content area shows an empty state with a call to action.";
 
 export function InternalMenu({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+
+  const isActive = (href: string) => location.pathname === href;
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -36,21 +41,27 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               <a
                 href="/dashboard"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  isActive("/dashboard") ? "bg-muted text-primary" : "text-muted-foreground"
+                }`}
               >
                 <Home className="h-4 w-4" />
                 Dashboard
               </a>
               <a
                 href="/leaderboards"
-                className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  isActive("/leaderboards") ? "bg-muted text-primary" : "text-muted-foreground"
+                }`}
               >
                 <Package className="h-4 w-4" />
                 Leaderboards
               </a>
               <a
                 href="/groups"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  isActive("/groups") ? "bg-muted text-primary" : "text-muted-foreground"
+                }`}
               >
                 <Users className="h-4 w-4" />
                 Groups
@@ -92,21 +103,27 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
                 </a>
                 <a
                   href="/dashboard"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                  className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-foreground ${
+                    isActive("/dashboard") ? "bg-muted text-primary" : "text-muted-foreground"
+                  }`}
                 >
                   <Home className="h-5 w-5" />
                   Dashboard
                 </a>
                 <a
                   href="/leaderboards"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                  className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-foreground ${
+                    isActive("/leaderboards") ? "bg-muted text-primary" : "text-muted-foreground"
+                  }`}
                 >
                   <Package className="h-5 w-5" />
                   Leaderboards
                 </a>
                 <a
                   href="/groups"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                  className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  hover:text-foreground ${
+                    isActive("/groups") ? "bg-muted text-primary" : "text-muted-foreground"
+                  }`}
                 >
                   <Users className="h-5 w-5" />
                   Groups
@@ -162,7 +179,7 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <div className="flex items-center">
-            <h1 className="text-lg font-semibold md:text-2xl">Your Health</h1>
+            <h1 className="text-lg font-semibold md:text-2xl capitalize">{location.pathname.substring(1)}</h1>
           </div>
           <div
             className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"

@@ -44,7 +44,6 @@ class VitalService {
         mqConnection.sendToQueue(`vital-user-queue`, message);
       } catch (error) {
         logger.error(error);
-        return;
       }
     }
   }

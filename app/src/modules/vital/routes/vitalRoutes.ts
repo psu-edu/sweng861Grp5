@@ -29,6 +29,6 @@ const router = Router();
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.get("/token/:vitalUserId", authenticateJWT, VitalController.getToken);
+router.get("/token/:vitalUserId", VitalController.getToken);
 
 export default router;
