@@ -10,7 +10,9 @@ export function LoginForm() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle data-testid="login" className="text-2xl">
+          Login
+        </CardTitle>
         <CardDescription>Let's get a BitFit</CardDescription>
       </CardHeader>
       <CardContent>
