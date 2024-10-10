@@ -12,6 +12,8 @@ import session from "express-session";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import goalRoutes from "./modules/goals/routes/goalRoutes";
+import vitalRoutes from "./modules/vital/routes/vitalRoutes";
+import VitalService from "./modules/vital/services/vitalService";
 import { morganMiddleware } from "./shared/middleware/morgan.middleware";
 import CacheService from "./shared/utils/cacheService";
 import { application } from "./shared/utils/constants";
@@ -45,6 +47,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 app.use("/", goalRoutes);
+app.use("/vital", vitalRoutes);
 
 connectDB();
 
@@ -53,6 +56,9 @@ connectDB();
 
 	CacheService;
 	logger.info("CacheService started listening to events");
+
+	VitalService;
+	logger.info("VitalService started listening to events");
 })();
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

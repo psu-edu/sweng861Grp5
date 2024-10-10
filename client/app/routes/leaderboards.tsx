@@ -1,8 +1,6 @@
-import { Charts } from "@/components/charts";
 import { InternalMenu } from "@/components/internal-menu";
-import { LinkButton } from "@/components/vital-link";
+import { Button } from "@/components/ui/button";
 import { title } from "@/config.shared";
-import { useUser } from "@/contexts/userContext";
 import type { MetaFunction } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
@@ -15,11 +13,12 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function Dash() {
-  const { user } = useUser();
+export default function Leaderboards() {
   return (
     <main className="">
-      <InternalMenu>{user && user.vitalProviders.length > 0 ? <Charts /> : <LinkButton />}</InternalMenu>
+      <InternalMenu>
+        <Button onClick={() => console.log("create a goal portal")}>Create Goal</Button>
+      </InternalMenu>
     </main>
   );
 }
