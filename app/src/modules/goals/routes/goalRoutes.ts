@@ -13,7 +13,7 @@ const router = Router();
  *     tags: [Goals]
  *     description: Retrieve all goals for a specific team.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: Goals retrieved successfully.
@@ -41,7 +41,7 @@ router.get("/goals", authenticateJWT, GoalController.getGoals);
  *     tags: [Goals]
  *     description: Retrieve a specific goal by its ID.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -74,7 +74,7 @@ router.get("/goals/:id", authenticateJWT, GoalController.getGoal);
  *     tags: [Goals]
  *     description: Create a new goal for a team.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -100,7 +100,7 @@ router.post("/goals", authenticateJWT, validateGoal, GoalController.createGoal);
  *     tags: [Goals]
  *     description: Update an existing goal.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -130,10 +130,10 @@ router.post("/goals", authenticateJWT, validateGoal, GoalController.createGoal);
  * @returns {Promise<void>}
  */
 router.patch(
-	"/goals/:id",
-	authenticateJWT,
-	validateGoal,
-	GoalController.updateGoal,
+  "/goals/:id",
+  authenticateJWT,
+  validateGoal,
+  GoalController.updateGoal,
 );
 
 /**
@@ -144,7 +144,7 @@ router.patch(
  *     tags: [Goals]
  *     description: Delete a specific goal by its ID.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - name: id
  *         in: path

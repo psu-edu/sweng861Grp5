@@ -18,7 +18,7 @@ class VitalService {
 		if (event.event === "user_created") {
 			const { userId } = event.data;
 
-			const saltyUser = this._saltUserId(userId);
+			const saltyUser = this.saltUserId(userId);
 			logger.info(
 				`Creating new vital user with userId: ${userId} and client userId: ${saltyUser}`,
 			);
@@ -39,19 +39,33 @@ class VitalService {
 					data: data,
 				};
 
-				mqConnection.sendToQueue("vital-user-queue", message);
+				mqConnection.sendToQueue("vital_user_queue", message);
 			} catch (error) {
 				logger.error(error);
 			}
 		}
 	}
 
-	_saltUserId(userId: string): string {
+	private saltUserId(userId: string): string {
 		const salt = crypto.randomBytes(16).toString("hex");
 		return crypto
 			.createHash("sha256")
 			.update(userId + salt)
 			.digest("hex");
+	}
+
+	private async handleVitalEvent(event: { event: string; data: any }) {
+		if (event.event === "user_created") {
+			const { vitalUserId, providers } = event.data;
+
+			logger.info(
+				`Entering providers for user with userId: ${vitalUserId}`,
+			);
+
+			// USER REPOSITORY enter providers info for user
+			//mqConnection.consume(this.handleEvent.bind(this), "vital_user_queue");
+			
+		}
 	}
 }
 
