@@ -1,8 +1,12 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
+
 module.exports = {
   testEnvironment: "jsdom",
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": "@swc/jest",
+  },
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/app/$1",
   },
   collectCoverage: true,
   coverageThreshold: {
@@ -14,4 +18,5 @@ module.exports = {
     },
   },
   collectCoverageFrom: ["./app"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 };

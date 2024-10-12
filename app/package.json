@@ -16,6 +16,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@tryvital/vital-node": "^3.1.82",
 		"amqplib": "^0.10.4",
 		"bcrypt": "^5.1.1",
 		"body-parser": "^1.20.3",
