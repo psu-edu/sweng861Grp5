@@ -17,9 +17,9 @@ class LeaderboardController {
             logger.info("New Leaderboard Entry request received.");
             const leaderboardEntry: ILeaderboardEntry = await LeaderboardService.createLeaderboardEntry(req.body, req.userId!);
             res.status(201).json(leaderboardEntry);
-            logger.info(`User Entry successfully created: ${leaderboardEntry.name}`);
+            logger.info(`Leaderboard Entry successfully created: ${leaderboardEntry.name}`);
         } catch (error: any) {
-            logger.error(`Error creating User Entry: ${error.message}`);
+            logger.error(`Error creating Leaderboard Entry: ${error.message}`);
             res.status(400).json({ error: error.message });
         }
     }
@@ -36,13 +36,13 @@ class LeaderboardController {
             const leaderboardEntry = await LeaderboardService.getLeaderboardEntryById(userEntryId, req.userId!);
             if (!leaderboardEntry) {
                 logger.warn(`Leaderboard Entry not found with ${req.params.id}`);
-                res.status(404).json({ error: "No Leaderboard Entry Found in Leaderboard" });
+                res.status(404).json({ error: "No Leaderboard Entries Found" });
             } else {
                 res.status(200).json(leaderboardEntry);
                 logger.info(`Leaderboard Entry successfully retrieved: ${leaderboardEntry.name}`);
             }
         } catch (error: any) {
-            logger.error(`Error retrieving user Leader Entry: ${error.message}`);
+            logger.error(`Error retrieving Leaderboard Entry: ${error.message}`);
             res.status(400).json({ error: error.message });
         }
     }
@@ -107,7 +107,7 @@ class LeaderboardController {
                 logger.warn(`Leaderboard Entry not found with ${req.params.id}`);
                 res.status(404).json({ error: "No Leaderboard Entry Found" });
             } else {
-                res.status(203).json();
+                res.status(204).json();
                 logger.info(`Leaderboard Entry successfully deleted from Leaderboard`);
             }
         } catch (error: any) {

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authenticateJWT from "../../../shared/middleware/authenticated.middleware";
 import LeaderboardController from "../controllers/leaderboardController";
+import { validateLeaderboardEntry } from "../validators/leaderboardEntryValidator";
 
 const router = Router();
 
@@ -89,12 +90,12 @@ router.get("/leaderboardEntry/:id", authenticateJWT, LeaderboardController.getLe
  *             schema:
  *               $ref: '#/components/schemas/LeaderboardEntry'
  *       400:
- *         description: Error occurred while creating the leaderboard entry.
+ *        description: Validation errors or bad request.
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.post("/leaderboardEntry", authenticateJWT, LeaderboardController.createLeaderboardEntry);
+router.post("/leaderboardEntry", authenticateJWT, validateLeaderboardEntry, LeaderboardController.createLeaderboardEntry);
 
 /**
  * @swagger
@@ -128,12 +129,12 @@ router.post("/leaderboardEntry", authenticateJWT, LeaderboardController.createLe
  *       404:
  *         description: Leaderboard entry not found.
  *       400:
- *         description: Error occurred while updating the leaderboard entry.
+ *         description: Validation errors or bad request.
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.patch("/leaderboardEntry/:id", authenticateJWT, LeaderboardController.updateLeaderboardEntry);
+router.patch("/leaderboardEntry/:id", authenticateJWT, validateLeaderboardEntry, LeaderboardController.updateLeaderboardEntry);
 
 /**
  * @swagger
@@ -157,7 +158,7 @@ router.patch("/leaderboardEntry/:id", authenticateJWT, LeaderboardController.upd
  *       404:
  *         description: Leaderboard entry not found.
  *       400:
- *         description: Error occurred while deleting the leaderboard entry.
+ *         description: Validation errors or bad request.
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
