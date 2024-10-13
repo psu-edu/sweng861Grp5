@@ -1,9 +1,19 @@
 import { type ReactNode, createContext, useContext, useState } from "react";
 
+export interface Idata {
+  providers: Provider[]
+}
+export interface Provider {
+  logo: string;
+  name: string;
+  slug: string;
+  status: string;
+  availability?: {};
+}
 export interface User {
   id: string | null;
   vitalUserID: string | null;
-  vitalProviders: string[];
+  vitalProviders: Provider[];
 }
 
 export interface UserContextType {
