@@ -1,6 +1,6 @@
-import mongoose, { Connection } from "mongoose";
-import { logger } from "./logger";
+import mongoose from "mongoose";
 import { mongo } from "./constants";
+import { logger } from "./logger";
 
 export default function connectDB() {
 	try {

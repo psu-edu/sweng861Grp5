@@ -6,7 +6,7 @@ import type { ILeaderboardEntry } from "../models/leaderboardEntry";
 import LeaderboardRepository from "../repositories/leaderboardRepository";
 import LeaderboardService from "../services/leaderboardService";
 
-describe("GoalService", () => {
+describe("LeaderboardService", () => {
 	let cacheStub: sinon.SinonStub;
 	let repoCreateStub: sinon.SinonStub;
 	let repoFindByIdStub: sinon.SinonStub;
@@ -17,9 +17,9 @@ describe("GoalService", () => {
 
 	const userId = "test-user-id";
 	const teamId = "test-team-id";
-	const entryId = "test-goal-id";
+	const entryId = "test-entry-id";
 	const entryData: Partial<ILeaderboardEntry> = {
-		name: "TJohn Doe",
+		name: "John Doe",
 		score: 10,
 		teamId: teamId,
 		userId: userId,

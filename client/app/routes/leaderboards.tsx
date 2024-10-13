@@ -64,7 +64,9 @@ export default function Leaderboards() {
       });
 
       if (response.ok) {
-        console.log("Goal created successfully!");
+          console.log("Goal created successfully!");
+
+          
       } else {
         console.error("Failed to create goal.");
       }

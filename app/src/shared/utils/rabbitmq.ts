@@ -16,6 +16,7 @@ class MQConnection {
 		while (attempt < retries) {
 			try {
 				logger.info("Connecting to Rabbit-MQ Server...");
+				logger.info(`Connection string to RabbitMQ: ${rabbit.connectionString}`);
 				this.connection = await client.connect(rabbit.connectionString);
 				this.channel = await this.connection.createChannel();
 

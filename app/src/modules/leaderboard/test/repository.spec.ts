@@ -43,23 +43,23 @@ describe("LeaderboardRepository", () => {
 
 	describe("findById", () => {
 		it("should return a entry by id and teamId", async () => {
-			const goalId = "goal-1";
+			const userId = "user-1";
 			const teamId = "team-1";
 			const mockEntry = { name: "John Doe" };
 
 			sinon.stub(LeaderboardEntry, "findOne").resolves(mockEntry);
 
-			const result = await LeaderboardRepository.findById(goalId, teamId);
+			const result = await LeaderboardRepository.findById(userId, teamId);
 			expect(result).to.deep.equal(mockEntry);
 		});
 
 		it("should return null if no entry is found", async () => {
-			const goalId = "goal-1";
+			const userId = "user-1";
 			const teamId = "team-1";
 
 			sinon.stub(LeaderboardEntry, "findOne").resolves(null);
 
-			const result = await LeaderboardRepository.findById(goalId, teamId);
+			const result = await LeaderboardRepository.findById(userId, teamId);
 			expect(result).to.be.null;
 		});
 	});
@@ -130,7 +130,7 @@ describe("LeaderboardRepository", () => {
 			expect(result).to.be.true;
 		});
 
-		it("should return false if no goal is deleted", async () => {
+		it("should return false if no entry is deleted", async () => {
 			const userId = "user- 1";
 			const teamId = "team-1";
 			const mockDeleteResult = { acknowledged: true, deletedCount: 0 };
