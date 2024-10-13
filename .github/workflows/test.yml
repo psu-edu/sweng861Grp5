@@ -37,7 +37,7 @@ jobs:
         working-directory: ./client
 
       - name: Run client Tests
-        run: npm test -- --passWithNoTests
+        run: npm test
         working-directory: ./client
 
       - name: Upload client coverage report

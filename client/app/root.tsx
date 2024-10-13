@@ -1,11 +1,11 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 
 import { GlobalPendingIndicator } from "@/components/global-pending-indicator";
-import { Header } from "@/components/header";
 import { ThemeSwitcherSafeHTML, ThemeSwitcherScript } from "@/components/theme-switcher";
 
 import { Toaster } from "./components/ui/toaster";
 import "./globals.css";
+import { UserProvider } from "./contexts/userContext";
 
 function App({ children }: { children: React.ReactNode }) {
   return (
@@ -30,9 +30,11 @@ function App({ children }: { children: React.ReactNode }) {
 
 export default function Root() {
   return (
-    <App>
-      <Outlet />
-    </App>
+    <UserProvider>
+      <App>
+        <Outlet />
+      </App>
+    </UserProvider>
   );
 }
 
