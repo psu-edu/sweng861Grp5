@@ -6,13 +6,13 @@ const router = Router();
 
 /**
  * @swagger
- * /vital/token/{vitalUserId}:
+ * /vital/token/{id}:
  *   get:
  *     summary: Get vital Token for VitalLink
  *     tags: [Vital]
  *     description: Retrieve vital token link for a client to use VitalLink portal.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - name: vitalUserId
  *         in: path
@@ -29,7 +29,7 @@ const router = Router();
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.get("/token/:vitalUserId", VitalController.getToken);
+router.get("/token/:id", authenticateJWT, VitalController.getToken);
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ router.get("/token/:vitalUserId", VitalController.getToken);
  *     tags: [Vital]
  *     description: Retrieve vital providers for a client and store info to database.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - name: vitalUserId
  *         in: path
@@ -56,7 +56,11 @@ router.get("/token/:vitalUserId", VitalController.getToken);
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.get("/providers/:vitalUserId", VitalController.getProviders);
+router.get(
+	"/providers/:vitalUserId",
+	authenticateJWT,
+	VitalController.getProviders,
+);
 
 /**
  * @swagger
@@ -66,7 +70,7 @@ router.get("/providers/:vitalUserId", VitalController.getProviders);
  *     tags: [Vital]
  *     description: Remove vital providers for a client and store info to database.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - name: provider
  *         in: path
@@ -89,6 +93,10 @@ router.get("/providers/:vitalUserId", VitalController.getProviders);
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.get("/remove/:provider/:vitalUserId", VitalController.getRemovalOfConnection);
+router.get(
+	"/remove/:provider/:vitalUserId",
+	authenticateJWT,
+	VitalController.getRemovalOfConnection,
+);
 
 export default router;

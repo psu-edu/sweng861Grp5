@@ -1,4 +1,8 @@
-import { Vital, VitalClient, VitalEnvironment } from "@tryvital/vital-node";
+import {
+	type Vital,
+	VitalClient,
+	VitalEnvironment,
+} from "@tryvital/vital-node";
 import type { Request, Response } from "express";
 import { logger } from "../../../shared/utils/logger";
 import mqConnection from "../../../shared/utils/rabbitmq";
@@ -12,7 +16,7 @@ class VitalController {
 				environment: VitalEnvironment.Sandbox,
 			});
 
-			const data = await client.link.token({ userId: req.params.vitalUserId! });
+			const data = await client.link.token({ userId: req.params.id! });
 
 			res.status(200).json(data);
 			logger.info("Successfully exchanged vital token");
@@ -30,17 +34,19 @@ class VitalController {
 				environment: VitalEnvironment.Sandbox,
 			});
 
-			const data = await client.user.getConnectedProviders(req.params.vitalUserId!);
+			const data = await client.user.getConnectedProviders(
+				req.params.vitalUserId!,
+			);
 
 			const allData = {
 				...data,
-				vitalUserId: req.params.vitalUserId!
-			}
+				vitalUserId: req.params.vitalUserId!,
+			};
 
 			const message = {
-					event: "VitalProviderConnected",
-					data: allData,
-				};
+				event: "VitalProviderConnected",
+				data: allData,
+			};
 
 			mqConnection.sendToQueue("vital_user_queue", message);
 
@@ -60,22 +66,20 @@ class VitalController {
 				environment: VitalEnvironment.Sandbox,
 			});
 
-			
-
 			const data = await client.user.deregisterProvider(
-    req.params.vitalUserId!,
-    req.params.provider! as Vital.Providers
-);
+				req.params.vitalUserId!,
+				req.params.provider! as Vital.Providers,
+			);
 
-const allData = {
+			const allData = {
 				...data,
-				vitalUserId: req.params.vitalUserId!
-			}
+				vitalUserId: req.params.vitalUserId!,
+			};
 
 			const message = {
-					event: "VitalProviderRemoved",
-					data: allData,
-				};
+				event: "VitalProviderRemoved",
+				data: allData,
+			};
 
 			mqConnection.sendToQueue("vital_user_queue", message);
 

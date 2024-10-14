@@ -5,7 +5,6 @@ import { validateLeaderboardEntry } from "../validators/leaderboardEntryValidato
 
 const router = Router();
 
-
 /**
  * @swagger
  * /leaderboard:
@@ -32,7 +31,11 @@ const router = Router();
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.get("/leaderboard", authenticateJWT, LeaderboardController.getLeaderboard);
+router.get(
+	"/leaderboard",
+	authenticateJWT,
+	LeaderboardController.getLeaderboard,
+);
 
 /**
  * @swagger
@@ -65,7 +68,11 @@ router.get("/leaderboard", authenticateJWT, LeaderboardController.getLeaderboard
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.get("/leaderboardEntry/:id", authenticateJWT, LeaderboardController.getLeaderboardEntry);
+router.get(
+	"/leaderboardEntry/:id",
+	authenticateJWT,
+	LeaderboardController.getLeaderboardEntry,
+);
 
 /**
  * @swagger
@@ -95,7 +102,12 @@ router.get("/leaderboardEntry/:id", authenticateJWT, LeaderboardController.getLe
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.post("/leaderboardEntry", authenticateJWT, validateLeaderboardEntry, LeaderboardController.createLeaderboardEntry);
+router.post(
+	"/leaderboardEntry",
+	authenticateJWT,
+	validateLeaderboardEntry,
+	LeaderboardController.createLeaderboardEntry,
+);
 
 /**
  * @swagger
@@ -134,7 +146,12 @@ router.post("/leaderboardEntry", authenticateJWT, validateLeaderboardEntry, Lead
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.patch("/leaderboardEntry/:id", authenticateJWT, validateLeaderboardEntry, LeaderboardController.updateLeaderboardEntry);
+router.patch(
+	"/leaderboardEntry/:id",
+	authenticateJWT,
+	validateLeaderboardEntry,
+	LeaderboardController.updateLeaderboardEntry,
+);
 
 /**
  * @swagger
@@ -163,6 +180,10 @@ router.patch("/leaderboardEntry/:id", authenticateJWT, validateLeaderboardEntry,
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.delete("/userEntry/:id", authenticateJWT, LeaderboardController.deleteLeaderboardEntry);
+router.delete(
+	"/userEntry/:id",
+	authenticateJWT,
+	LeaderboardController.deleteLeaderboardEntry,
+);
 
 export default router;

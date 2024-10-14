@@ -1,80 +1,96 @@
 import cacheService from "../../../shared/utils/cacheService";
 import { logger } from "../../../shared/utils/logger";
-import type { ILeaderboardEntry } from "../models/leaderboardEntry";
 import mqConnection from "../../../shared/utils/rabbitmq";
+import type { ILeaderboardEntry } from "../models/leaderboardEntry";
 import LeaderboardRepository from "../repositories/leaderboardRepository";
 
 class LeaderboardService {
+	async createLeaderboardEntry(
+		leaderboardEntryData: Partial<ILeaderboardEntry>,
+		userId: string,
+	): Promise<ILeaderboardEntry> {
+		const teamId = await cacheService.getTeamIdFromCache(userId);
+		logger.info(
+			`Creating new user entry in leaderboard: ${leaderboardEntryData.name}`,
+		);
 
-    async createLeaderboardEntry(leaderboardEntryData: Partial<ILeaderboardEntry>, userId: string ): Promise<ILeaderboardEntry> {
-        const teamId = await cacheService.getTeamIdFromCache(userId);
-        logger.info(`Creating new user entry in leaderboard: ${leaderboardEntryData.name}`);
+		const data = {
+			...leaderboardEntryData,
+			createdAt: new Date(),
+			userId,
+			teamId: teamId!,
+		};
 
-        const data = {
-            ...leaderboardEntryData,
-            createdAt: new Date(),
-            userId,
-            teamId: teamId!,
-        };
+		const message = {
+			event: "LeaderboardEntryCreated",
+			data: data,
+		};
 
-        const message = {
-            event: "LeaderboardEntryCreated",
-            data: data,
-        };
+		mqConnection.sendToQueue(`team-${teamId}-leaderboard-queue`, message);
 
-        mqConnection.sendToQueue(`team-${teamId}-leaderboard-queue`, message);
+		return await LeaderboardRepository.create(leaderboardEntryData, teamId!);
+	}
 
-        return await LeaderboardRepository.create(leaderboardEntryData, teamId!);
-    }
+	async getLeaderboardEntryById(
+		id: string,
+		userId: string,
+	): Promise<ILeaderboardEntry | null> {
+		logger.info(`Retrieving leaderboard entry: ${id} in leaderboard`);
+		const teamId = await cacheService.getTeamIdFromCache(userId);
+		return await LeaderboardRepository.findById(id, teamId!);
+	}
 
-    async getLeaderboardEntryById(id: string, userId: string): Promise<ILeaderboardEntry | null> {
-        logger.info(`Retrieving leaderboard entry: ${id} in leaderboard`);
-        const teamId = await cacheService.getTeamIdFromCache(userId);
-        return await LeaderboardRepository.findById(id, teamId!);
-    }
+	async getAllLeaderboard(userId: string): Promise<ILeaderboardEntry[] | null> {
+		logger.info("Retrieving user entries");
+		const teamId = await cacheService.getTeamIdFromCache(userId);
+		return await LeaderboardRepository.findAll(teamId!);
+	}
 
+	async updateLeaderboardEntry(
+		id: string,
+		userId: string,
+		data: Partial<ILeaderboardEntry>,
+	): Promise<ILeaderboardEntry | null> {
+		logger.info(`Updating user entry data in leaderboard: ${id}`);
+		const teamId = await cacheService.getTeamIdFromCache(userId);
 
-    async getAllLeaderboard(userId: string): Promise<ILeaderboardEntry[] | null> {
-        logger.info(`Retrieving user entries`);
-        const teamId = await cacheService.getTeamIdFromCache(userId);
-        return await LeaderboardRepository.findAll(teamId!);
-    }
+		const leaderboardEntryData = {
+			...data,
+			updatedAt: new Date(),
+			userId,
+			teamId: teamId!,
+		};
 
-  
-    async updateLeaderboardEntry(id: string, userId: string, data: Partial<ILeaderboardEntry>): Promise<ILeaderboardEntry | null> {
-        logger.info(`Updating user entry data in leaderboard: ${id}`);
-        const teamId = await cacheService.getTeamIdFromCache(userId);
+		const message = {
+			event: "LeaderboardUpdated",
+			data: leaderboardEntryData,
+		};
 
-        const leaderboardEntryData = {
-            ...data,
-            updatedAt: new Date(),
-            userId,
-            teamId: teamId!,
-        };
+		mqConnection.sendToQueue(`team-${teamId}-leaderboard-queue`, message);
+		return await LeaderboardRepository.updateById(
+			id,
+			teamId!,
+			leaderboardEntryData,
+		);
+	}
 
-        const message = {
-            event: "LeaderboardUpdated",
-            data: leaderboardEntryData,
-        };
+	async deleteLeaderboardEntry(
+		id: string,
+		userId: string,
+	): Promise<boolean | null> {
+		logger.info(`Deleting user entry in leaderboard: ${id}`);
 
-        mqConnection.sendToQueue(`team-${teamId}-leaderboard-queue`, message);
-        return await LeaderboardRepository.updateById(id, teamId!, leaderboardEntryData);
-    }
+		const teamId = await cacheService.getTeamIdFromCache(userId);
+		const leaderEntryData = await LeaderboardRepository.findById(id, teamId!);
 
-    async deleteLeaderboardEntry(id: string, userId: string): Promise<boolean | null> {
-        logger.info(`Deleting user entry in leaderboard: ${id}`);
+		const message = {
+			event: "LeaderboardEntryDeleted",
+			data: LeaderboardRepository,
+		};
 
-        const teamId = await cacheService.getTeamIdFromCache(userId);
-        const leaderEntryData = await LeaderboardRepository.findById(id, teamId!);
+		mqConnection.sendToQueue(`team-${teamId}-leaderboard-queue`, message);
 
-        const message = {
-            event: "LeaderboardEntryDeleted",
-            data: LeaderboardRepository,
-        };
-
-        mqConnection.sendToQueue(`team-${teamId}-leaderboard-queue`, message);
-
-        return await LeaderboardRepository.deleteById(id, teamId!);
-    }
+		return await LeaderboardRepository.deleteById(id, teamId!);
+	}
 }
 export default new LeaderboardService();

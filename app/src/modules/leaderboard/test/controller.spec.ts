@@ -34,7 +34,10 @@ describe("LeaderboardController", () => {
 		it("should return 400 if validation errors exist", async () => {
 			req.body = {};
 			sinon.stub(LeaderboardService, "createLeaderboardEntry").resolves();
-			await LeaderboardController.createLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.createLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
 		});
 
@@ -48,7 +51,10 @@ describe("LeaderboardController", () => {
 				userId: "user123",
 				teamId: "team1234",
 			} as ILeaderboardEntry);
-			await LeaderboardController.createLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.createLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(201)).to.be.true;
 		});
 
@@ -58,7 +64,10 @@ describe("LeaderboardController", () => {
 			sinon
 				.stub(LeaderboardService, "createLeaderboardEntry")
 				.throws(new Error("Error creating leaderboard entry"));
-			await LeaderboardController.createLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.createLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
 		});
 	});
@@ -66,17 +75,24 @@ describe("LeaderboardController", () => {
 	describe("getLeaderboardEntry", () => {
 		it("should return 400 if userId is invalid", async () => {
 			req.params = { id: "invalid-id" };
-			await LeaderboardController.getLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.getLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
-			expect(jsonStub.calledWith({ message: "Invalid Leaderboard Entry ID format" })).to.be
-				.true;
+			expect(
+				jsonStub.calledWith({ message: "Invalid Leaderboard Entry ID format" }),
+			).to.be.true;
 		});
 
 		it("should return 404 if userEntry is not found", async () => {
 			req.params = { id: new mongoose.Types.ObjectId().toString() };
 			req.userId = "123";
 			sinon.stub(LeaderboardService, "getLeaderboardEntryById").resolves(null);
-			await LeaderboardController.getLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.getLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(404)).to.be.true;
 		});
 
@@ -84,8 +100,13 @@ describe("LeaderboardController", () => {
 			req.params = { id: new mongoose.Types.ObjectId().toString() };
 			req.userId = "123";
 			const entry = { name: "John Doe" };
-			sinon.stub(LeaderboardService, "getLeaderboardEntryById").resolves(entry as any);
-			await LeaderboardController.getLeaderboardEntry(req as Request, res as Response);
+			sinon
+				.stub(LeaderboardService, "getLeaderboardEntryById")
+				.resolves(entry as any);
+			await LeaderboardController.getLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(200)).to.be.true;
 			expect(jsonStub.calledWith(entry)).to.be.true;
 		});
@@ -96,10 +117,14 @@ describe("LeaderboardController", () => {
 			sinon
 				.stub(LeaderboardService, "getLeaderboardEntryById")
 				.throws(new Error("Error retrieving Leaderboard Entry"));
-			await LeaderboardController.getLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.getLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
-			expect(jsonStub.calledWith({ error: "Error retrieving Leaderboard Entry" })).to.be
-				.true;
+			expect(
+				jsonStub.calledWith({ error: "Error retrieving Leaderboard Entry" }),
+			).to.be.true;
 		});
 	});
 
@@ -107,15 +132,23 @@ describe("LeaderboardController", () => {
 		it("should return 404 if no entires are found", async () => {
 			req.userId = "123";
 			sinon.stub(LeaderboardService, "getAllLeaderboard").resolves(null);
-			await LeaderboardController.getLeaderboard(req as Request, res as Response);
+			await LeaderboardController.getLeaderboard(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(404)).to.be.true;
 		});
 
 		it("should return 200 if entries are found", async () => {
 			req.userId = "123";
 			const entry = [{ name: "John Doe" }];
-			sinon.stub(LeaderboardService, "getAllLeaderboard").resolves(entry as any);
-			await LeaderboardController.getLeaderboard(req as Request, res as Response);
+			sinon
+				.stub(LeaderboardService, "getAllLeaderboard")
+				.resolves(entry as any);
+			await LeaderboardController.getLeaderboard(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(200)).to.be.true;
 			expect(jsonStub.calledWith(entry)).to.be.true;
 		});
@@ -125,7 +158,10 @@ describe("LeaderboardController", () => {
 			sinon
 				.stub(LeaderboardService, "getAllLeaderboard")
 				.throws(new Error("Error retrieving Leaderboard Entries"));
-			await LeaderboardController.getLeaderboard(req as Request, res as Response);
+			await LeaderboardController.getLeaderboard(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
 		});
 	});
@@ -133,7 +169,10 @@ describe("LeaderboardController", () => {
 	describe("updateLeaderboardEntry", () => {
 		it("should return 400 if userId is invalid", async () => {
 			req.params = { id: "invalid-id" };
-			await LeaderboardController.updateLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.updateLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
 		});
 
@@ -141,7 +180,10 @@ describe("LeaderboardController", () => {
 			req.params = { id: new mongoose.Types.ObjectId().toString() };
 			req.userId = "123";
 			sinon.stub(LeaderboardService, "updateLeaderboardEntry").resolves(null);
-			await LeaderboardController.updateLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.updateLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(404)).to.be.true;
 		});
 
@@ -150,8 +192,13 @@ describe("LeaderboardController", () => {
 			req.userId = "123";
 			req.body = { score: 999 };
 			const updatedScore = { name: "Updated Leaderboard Entry" };
-			sinon.stub(LeaderboardService, "updateLeaderboardEntry").resolves(updatedScore as any);
-			await LeaderboardController.updateLeaderboardEntry(req as Request, res as Response);
+			sinon
+				.stub(LeaderboardService, "updateLeaderboardEntry")
+				.resolves(updatedScore as any);
+			await LeaderboardController.updateLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(200)).to.be.true;
 			expect(jsonStub.calledWith(updatedScore)).to.be.true;
 		});
@@ -163,7 +210,10 @@ describe("LeaderboardController", () => {
 			sinon
 				.stub(LeaderboardService, "updateLeaderboardEntry")
 				.throws(new Error("Error updating Leaderboard Entry"));
-			await LeaderboardController.updateLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.updateLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
 		});
 	});
@@ -171,7 +221,10 @@ describe("LeaderboardController", () => {
 	describe("deleteLeaderboardEntry", () => {
 		it("should return 400 if userID is invalid", async () => {
 			req.params = { id: "invalid-id" };
-			await LeaderboardController.deleteLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.deleteLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
 		});
 
@@ -179,7 +232,10 @@ describe("LeaderboardController", () => {
 			req.params = { id: new mongoose.Types.ObjectId().toString() };
 			req.userId = "123";
 			sinon.stub(LeaderboardService, "deleteLeaderboardEntry").resolves(null);
-			await LeaderboardController.deleteLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.deleteLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(404)).to.be.true;
 		});
 
@@ -187,7 +243,10 @@ describe("LeaderboardController", () => {
 			req.params = { id: new mongoose.Types.ObjectId().toString() };
 			req.userId = "123";
 			sinon.stub(LeaderboardService, "deleteLeaderboardEntry").resolves(true);
-			await LeaderboardController.deleteLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.deleteLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(204)).to.be.true;
 		});
 
@@ -197,7 +256,10 @@ describe("LeaderboardController", () => {
 			sinon
 				.stub(LeaderboardService, "deleteLeaderboardEntry")
 				.throws(new Error("Error deleting Leaderboard Entry"));
-			await LeaderboardController.deleteLeaderboardEntry(req as Request, res as Response);
+			await LeaderboardController.deleteLeaderboardEntry(
+				req as Request,
+				res as Response,
+			);
 			expect(statusStub.calledWith(400)).to.be.true;
 		});
 	});

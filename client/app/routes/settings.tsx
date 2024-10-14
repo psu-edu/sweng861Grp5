@@ -6,14 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LinkButton } from "@/components/vital-link";
 import { title } from "@/config.shared";
-import { Idata, Provider, User, useUser } from "@/contexts/userContext";
-import {
-  getUserConnectedProviderToBackend,
-  removeUserConnectedProviderToBackend,
-} from "@/lib/fetchers";
-import type { MetaFunction } from "@remix-run/node";
-import { useNavigate } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import type { Provider } from "@/contexts/userContext";
+import { removeUserConnectedProviderToBackend } from "@/lib/fetchers";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { redirect, useLoaderData, useNavigate } from "@remix-run/react";
+import { useState } from "react";
+import type { LoaderData, UserInfo } from "./dashboard";
 
 export const meta: MetaFunction = () => {
   return [
@@ -28,50 +26,18 @@ export const meta: MetaFunction = () => {
 export default function Settings() {
   const navigation = useNavigate();
   const [edit, setEdit] = useState(false);
-  const { user, setUser } = useUser();
+  const { userInfo, userId } = useLoaderData<LoaderData>();
   const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    password: "",
+    first: userInfo.username.split("_")[0],
+    last: userInfo.username.split("_")[1],
+    email: userInfo.email,
+    password: userInfo.password,
   });
-  const userID = "64c76fad-5292-4761-aafe-5c0ab306ea72";
 
   async function removeConnection(provider: string) {
-    const data = await removeUserConnectedProviderToBackend(userID, provider);
+    const data = await removeUserConnectedProviderToBackend(userId, provider);
     // Handle removal logic here
   }
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function dataFetch() {
-      try {
-        const data = await getUserConnectedProviderToBackend(userID);
-
-        if (isMounted) {
-          setUser({
-            ...user,
-            vitalProviders: data.providers,
-          } as User);
-
-          // Prefill form with user data (fake data for now)
-          setUserData({
-            name: "John Doe",
-            email: "john@example.com",
-            password: "password123",
-          });
-        }
-      } catch (error) {
-        console.error("Failed to fetch data", error);
-      }
-    }
-
-    dataFetch();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [userID, setUser]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -98,24 +64,16 @@ export default function Settings() {
         </Avatar>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-1">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              name="name"
-              value={userData.name}
-              onChange={handleInputChange}
-              disabled={!edit}
-            />
+            <Label htmlFor="first">First Name</Label>
+            <Input id="first" name="first" value={userData.first} onChange={handleInputChange} disabled={!edit} />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="last">Last Name</Label>
+            <Input id="last" name="last" value={userData.last} onChange={handleInputChange} disabled={!edit} />
           </div>
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              value={userData.email}
-              onChange={handleInputChange}
-              disabled={!edit}
-            />
+            <Input id="email" name="email" value={userData.email} onChange={handleInputChange} disabled={!edit} />
           </div>
           {edit && (
             <div className="space-y-1">
@@ -132,19 +90,11 @@ export default function Settings() {
 
           <div className="space-y-1">
             <p>Health Providers</p>
-            {user && user.vitalProviders.length > 0 && (
+            {userInfo?.providers && userInfo.providers.length > 0 && (
               <div className="flex space-x-2 py-5">
-                {user.vitalProviders.map((
-                  provider: Provider,
-                  index: number,
-                ) => (
+                {userInfo.providers.map((provider: Provider, index: number) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <img
-                      src={provider.logo}
-                      alt={provider.name}
-                      width={30}
-                      height={25}
-                    />
+                    <img src={provider.logo} alt={provider.name} width={30} height={25} />
                     {edit && (
                       <Badge
                         className="cursor-pointer"
@@ -158,38 +108,58 @@ export default function Settings() {
                 ))}
               </div>
             )}
-            <LinkButton />
+            <LinkButton userID={userInfo.vitalUserId as string} />
           </div>
 
-          {edit
-            ? (
-              <div className="space-x-4">
-                <Button type="submit">Submit</Button>
-                <Button
-                  type="button"
-                  variant={"secondary"}
-                  onClick={() => setEdit(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            )
-            : (
-              <div className="space-x-4">
-                <Button type="button" onClick={() => setEdit(true)}>
-                  Edit
-                </Button>
-                <Button
-                  type="button"
-                  variant={"secondary"}
-                  onClick={() => navigation(-1)}
-                >
-                  Back
-                </Button>
-              </div>
-            )}
+          {edit ? (
+            <div className="space-x-4">
+              <Button type="submit">Submit</Button>
+              <Button type="button" variant={"secondary"} onClick={() => setEdit(false)}>
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <div className="space-x-4">
+              <Button type="button" onClick={() => setEdit(true)}>
+                Edit
+              </Button>
+              <Button type="button" variant={"secondary"} onClick={() => navigation(-1)}>
+                Back
+              </Button>
+            </div>
+          )}
         </form>
       </main>
     </>
   );
 }
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const cookieHeader = request.headers.get("Cookie");
+
+  const headers: HeadersInit = cookieHeader ? { Cookie: cookieHeader } : {};
+
+  const response = await fetch("http://localhost:8080/verify-token", {
+    headers,
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    return redirect("/login");
+  }
+
+  const { userId } = await response.json();
+
+  const userResponse = await fetch(`http://localhost:8080/users/${userId}`, {
+    headers,
+    credentials: "include",
+  });
+
+  if (!userResponse.ok) {
+    return redirect("/login");
+  }
+
+  const userInfo: UserInfo = await userResponse.json();
+
+  return { userId, userInfo };
+};

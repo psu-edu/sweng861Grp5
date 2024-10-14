@@ -31,7 +31,9 @@ describe("LeaderboardRepository", () => {
 			const entryData = { name: "John Doe" };
 			const teamId = "team-1";
 
-			sinon.stub(LeaderboardEntry.prototype, "save").throws(new Error("Creation Error"));
+			sinon
+				.stub(LeaderboardEntry.prototype, "save")
+				.throws(new Error("Creation Error"));
 
 			try {
 				await LeaderboardRepository.create(entryData, teamId);

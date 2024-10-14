@@ -52,7 +52,10 @@ describe("LeaderboardService", () => {
 
 	describe("createLeaderboardEntry", () => {
 		it("should create a new entry and send a message to the queue", async () => {
-			const result = await LeaderboardService.createLeaderboardEntry(entryData, userId);
+			const result = await LeaderboardService.createLeaderboardEntry(
+				entryData,
+				userId,
+			);
 
 			expect(cacheStub.calledOnceWithExactly(userId)).to.be.true;
 			expect(repoCreateStub.calledOnce).to.be.true;
@@ -68,10 +71,14 @@ describe("LeaderboardService", () => {
 
 	describe("getLeaderboardEntryById", () => {
 		it("should retrieve an entry by ID", async () => {
-			const result = await LeaderboardService.getLeaderboardEntryById(entryId, userId);
+			const result = await LeaderboardService.getLeaderboardEntryById(
+				entryId,
+				userId,
+			);
 
 			expect(cacheStub.calledOnceWithExactly(userId)).to.be.true;
-			expect(repoFindByIdStub.calledOnceWithExactly(entryId, teamId)).to.be.true;
+			expect(repoFindByIdStub.calledOnceWithExactly(entryId, teamId)).to.be
+				.true;
 			expect(result).to.deep.equal(entryData);
 		});
 	});
@@ -120,10 +127,14 @@ describe("LeaderboardService", () => {
 
 	describe("deleteLeaderboardEntry", () => {
 		it("should delete a entry by ID and send a message to the queue", async () => {
-			const result = await LeaderboardService.deleteLeaderboardEntry(entryId, userId);
+			const result = await LeaderboardService.deleteLeaderboardEntry(
+				entryId,
+				userId,
+			);
 
 			expect(cacheStub.calledOnceWithExactly(userId)).to.be.true;
-			expect(repoFindByIdStub.calledOnceWithExactly(entryId, teamId)).to.be.true;
+			expect(repoFindByIdStub.calledOnceWithExactly(entryId, teamId)).to.be
+				.true;
 			expect(repoDeleteByIdStub.calledOnceWithExactly(entryId, teamId)).to.be
 				.true;
 			expect(

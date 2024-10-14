@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { InternalMenu } from "@/components/internal-menu";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,14 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 export default function Leaderboards() {
   const [metric, setMetric] = useState("");
@@ -36,7 +29,7 @@ export default function Leaderboards() {
       isValid = false;
     }
 
-    if (!goal || isNaN(Number(goal))) {
+    if (!goal || Number.isNaN(Number(goal))) {
       newErrors.goal = "Goal must be a number.";
       isValid = false;
     }
@@ -64,9 +57,7 @@ export default function Leaderboards() {
       });
 
       if (response.ok) {
-          console.log("Goal created successfully!");
-
-          
+        console.log("Goal created successfully!");
       } else {
         console.error("Failed to create goal.");
       }
@@ -85,8 +76,7 @@ export default function Leaderboards() {
               <DialogHeader>
                 <DialogTitle>Create Goal</DialogTitle>
                 <DialogDescription>
-                  You can create a Goal based on a common health metric and
-                  compete on a leaderboard!
+                  You can create a Goal based on a common health metric and compete on a leaderboard!
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit}>
@@ -102,35 +92,22 @@ export default function Leaderboards() {
                       <SelectContent>
                         <SelectGroup>
                           <SelectItem value="steps">Steps</SelectItem>
-                          <SelectItem value="body_weight">
-                            Body Weight
-                          </SelectItem>
+                          <SelectItem value="body_weight">Body Weight</SelectItem>
                           <SelectItem value="max_hr">Max Heart Rate</SelectItem>
-                          <SelectItem value="calories">
-                            Calories Burned
-                          </SelectItem>
+                          <SelectItem value="calories">Calories Burned</SelectItem>
                           <SelectItem value="distance">Distance</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    {errors.metric && (
-                      <p className="text-red-500">{errors.metric}</p>
-                    )}
+                    {errors.metric && <p className="text-red-500">{errors.metric}</p>}
                   </div>
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="goal" className="text-right">
                       Goal
                     </Label>
-                    <Input
-                      id="goal"
-                      value={goal}
-                      onChange={(e) => setGoal(e.target.value)}
-                      className="col-span-3"
-                    />
-                    {errors.goal && (
-                      <p className="text-red-500">{errors.goal}</p>
-                    )}
+                    <Input id="goal" value={goal} onChange={(e) => setGoal(e.target.value)} className="col-span-3" />
+                    {errors.goal && <p className="text-red-500">{errors.goal}</p>}
                   </div>
 
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -149,9 +126,7 @@ export default function Leaderboards() {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    {errors.interval && (
-                      <p className="text-red-500">{errors.interval}</p>
-                    )}
+                    {errors.interval && <p className="text-red-500">{errors.interval}</p>}
                   </div>
                 </div>
                 <DialogFooter>
