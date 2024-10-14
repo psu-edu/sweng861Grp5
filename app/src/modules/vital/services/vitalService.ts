@@ -1,8 +1,11 @@
 import * as crypto from "node:crypto";
 import { VitalClient, VitalEnvironment } from "@tryvital/vital-node";
 import type { UserCreateBody } from "@tryvital/vital-node/api";
+import { EVENTS, QUEUES } from "../../../shared/utils/enums";
+import { generateRandomBytes } from "../../../shared/utils/generateRandomBytes";
 import { logger } from "../../../shared/utils/logger";
 import mqConnection from "../../../shared/utils/rabbitmq";
+import type { QueueMessage } from "../../../shared/utils/types";
 
 type VitalUserResponse = {
 	userId: string;
@@ -11,11 +14,11 @@ type VitalUserResponse = {
 
 class VitalService {
 	constructor() {
-		mqConnection.consume(this.handleEvent.bind(this), "user_event");
+		mqConnection.consume(this.handleEvent.bind(this), QUEUES.USER);
 	}
 
 	private async handleEvent(event: { event: string; data: any }) {
-		if (event.event === "user_created") {
+		if (event.event === EVENTS.USER_CREATED) {
 			const { userId } = event.data;
 
 			const saltyUser = this.saltUserId(userId);
@@ -32,14 +35,20 @@ class VitalService {
 			};
 
 			try {
-				const data: VitalUserResponse = await client.user.create(request);
+				const vitalData: VitalUserResponse = await client.user.create(request);
 
-				const message = {
-					event: "VitalUserCreated",
-					data: data,
+				const data = {
+					clientUserId: vitalData.clientUserId,
+					vitalUserId: vitalData.userId,
+					userId,
 				};
 
-				mqConnection.sendToQueue("vital_user_queue", message);
+				const message: QueueMessage = {
+					event: EVENTS.VITAL_USER,
+					data,
+				};
+
+				mqConnection.sendToQueue(QUEUES.VITAL_USER, message);
 			} catch (error) {
 				logger.error(error);
 			}
@@ -47,25 +56,11 @@ class VitalService {
 	}
 
 	private saltUserId(userId: string): string {
-		const salt = crypto.randomBytes(16).toString("hex");
+		const salt = generateRandomBytes(16);
 		return crypto
 			.createHash("sha256")
 			.update(userId + salt)
 			.digest("hex");
-	}
-
-	private async handleVitalEvent(event: { event: string; data: any }) {
-		if (event.event === "user_created") {
-			const { vitalUserId, providers } = event.data;
-
-			logger.info(
-				`Entering providers for user with userId: ${vitalUserId}`,
-			);
-
-			// USER REPOSITORY enter providers info for user
-			//mqConnection.consume(this.handleEvent.bind(this), "vital_user_queue");
-			
-		}
 	}
 }
 

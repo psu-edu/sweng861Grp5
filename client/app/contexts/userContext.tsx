@@ -1,7 +1,7 @@
 import { type ReactNode, createContext, useContext, useState } from "react";
 
 export interface Idata {
-  providers: Provider[]
+  providers: Provider[];
 }
 export interface Provider {
   logo: string;

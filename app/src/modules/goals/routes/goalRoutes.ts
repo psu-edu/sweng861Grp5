@@ -130,10 +130,10 @@ router.post("/goals", authenticateJWT, validateGoal, GoalController.createGoal);
  * @returns {Promise<void>}
  */
 router.patch(
-  "/goals/:id",
-  authenticateJWT,
-  validateGoal,
-  GoalController.updateGoal,
+	"/goals/:id",
+	authenticateJWT,
+	validateGoal,
+	GoalController.updateGoal,
 );
 
 /**

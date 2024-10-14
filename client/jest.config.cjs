@@ -1,5 +1,3 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} **/
-
 module.exports = {
   testEnvironment: "jsdom",
   transform: {
@@ -8,6 +6,7 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/app/$1",
   },
+  moduleFileExtensions: ["js", "jsx", "ts", "tsx", "json", "node"],
   collectCoverage: true,
   coverageThreshold: {
     global: {
@@ -18,5 +17,7 @@ module.exports = {
     },
   },
   collectCoverageFrom: ["./app"],
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.cjs"],
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
+  transformIgnorePatterns: ["/node_modules/(?!(@remix-run|@react|react-dom)/)"],
 };

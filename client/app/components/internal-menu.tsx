@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Bell, CircleUser, Home, Menu, Package, Package2, Search, Users } from "lucide-react";
 import type React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 export const description =
   "A products dashboard with a sidebar navigation and a main content area. The dashboard has a header with a search input and a user menu. The sidebar has a logo, navigation links, and a card with a call to action. The main content area shows an empty state with a call to action.";
@@ -20,6 +21,26 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   const isActive = (href: string) => location.pathname === href;
+
+  const navigation = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/logout", {
+        method: "POST",
+        credentials: "include", // Include cookies in the request
+      });
+
+      if (response.ok) {
+        document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        navigation("/login");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
+  };
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -66,22 +87,19 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
               </a>
             </nav>
           </div>
-          {/* <div className="mt-auto p-4"> */}
-          {/*   <Card x-chunk="dashboard-02-chunk-0"> */}
-          {/*     <CardHeader className="p-2 pt-0 md:p-4"> */}
-          {/*       <CardTitle>Upgrade to Pro</CardTitle> */}
-          {/*       <CardDescription> */}
-          {/*         Unlock all features and get unlimited access to our support */}
-          {/*         team. */}
-          {/*       </CardDescription> */}
-          {/*     </CardHeader> */}
-          {/*     <CardContent className="p-2 pt-0 md:p-4 md:pt-0"> */}
-          {/*       <Button size="sm" className="w-full"> */}
-          {/*         Upgrade */}
-          {/*       </Button> */}
-          {/*     </CardContent> */}
-          {/*   </Card> */}
-          {/* </div> */}
+          <div className="mt-auto p-4">
+            <Card x-chunk="dashboard-02-chunk-0">
+              <CardHeader className="p-2 pt-0 md:p-4">
+                <CardTitle>Upgrade to Pro</CardTitle>
+                <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
+                <Button size="sm" className="w-full">
+                  Upgrade
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
       <div className="flex flex-col">
@@ -127,22 +145,19 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
                   Groups
                 </a>
               </nav>
-              {/* <div className="mt-auto"> */}
-              {/*   <Card> */}
-              {/*     <CardHeader> */}
-              {/*       <CardTitle>Upgrade to Pro</CardTitle> */}
-              {/*       <CardDescription> */}
-              {/*         Unlock all features and get unlimited access to our */}
-              {/*         support team. */}
-              {/*       </CardDescription> */}
-              {/*     </CardHeader> */}
-              {/*     <CardContent> */}
-              {/*       <Button size="sm" className="w-full"> */}
-              {/*         Upgrade */}
-              {/*       </Button> */}
-              {/*     </CardContent> */}
-              {/*   </Card> */}
-              {/* </div> */}
+              <div className="mt-auto">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Upgrade to Pro</CardTitle>
+                    <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button size="sm" className="w-full">
+                      Upgrade
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1">
@@ -171,7 +186,7 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
                 <a href="/settings">Settings</a>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
@@ -183,15 +198,6 @@ export function InternalMenu({ children }: { children: React.ReactNode }) {
             className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
             x-chunk="dashboard-02-chunk-1"
           >
-            {/* <div className="flex flex-col items-center gap-1 text-center"> */}
-            {/*   <h3 className="text-2xl font-bold tracking-tight"> */}
-            {/*     You have no products */}
-            {/*   </h3> */}
-            {/*   <p className="text-sm text-muted-foreground"> */}
-            {/*     You can start selling as soon as you add a product. */}
-            {/*   </p> */}
-            {/*   <Button className="mt-4">Add Product</Button> */}
-            {/* </div> */}
             {children}
           </div>
         </main>

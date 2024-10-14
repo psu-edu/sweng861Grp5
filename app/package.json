@@ -12,11 +12,7 @@
 		"fix": "biome check . --write",
 		"lint": "biome check ."
 	},
-	"keywords": [
-		"fitness",
-		"app",
-		"MERN"
-	],
+	"keywords": ["fitness", "app", "MERN"],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
@@ -25,6 +21,7 @@
 		"bcrypt": "^5.1.1",
 		"body-parser": "^1.20.3",
 		"chai-http": "^4.1.1",
+		"cookie": "^1.0.1",
 		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",
@@ -44,6 +41,7 @@
 		"@biomejs/biome": "^1.9.2",
 		"@istanbuljs/nyc-config-typescript": "^1.0.2",
 		"@types/amqplib": "^0.10.5",
+		"@types/bcrypt": "^5.0.2",
 		"@types/chai": "^4.3.19",
 		"@types/chai-http": "^3.0.5",
 		"@types/cookie-parser": "^1.4.7",
@@ -69,18 +67,9 @@
 		"extends": "@istanbuljs/nyc-config-typescript",
 		"check-coverage": true,
 		"all": true,
-		"include": [
-			"**/!(*.spec.*).ts"
-		],
-		"exclude": [
-			"src/test/**/*.*"
-		],
-		"reporter": [
-			"html",
-			"lcov",
-			"text",
-			"text-summary"
-		],
+		"include": ["**/!(*.spec.*).ts"],
+		"exclude": ["src/test/**/*.*"],
+		"reporter": ["html", "lcov", "text", "text-summary"],
 		"report-dir": "coverage"
 	}
 }

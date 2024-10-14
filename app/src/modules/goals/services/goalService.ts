@@ -1,6 +1,8 @@
 import cacheService from "../../../shared/utils/cacheService";
+import { EVENTS } from "../../../shared/utils/enums";
 import { logger } from "../../../shared/utils/logger";
 import mqConnection from "../../../shared/utils/rabbitmq";
+import type { QueueMessage } from "../../../shared/utils/types";
 import type { IGoal } from "../models/goal";
 import GoalRepository from "../repositories/goalRepository";
 
@@ -16,8 +18,8 @@ class GoalService {
 			teamId: teamId!,
 		};
 
-		const message = {
-			event: "GoalCreated",
+		const message: QueueMessage = {
+			event: EVENTS.GOAL_CREATED,
 			data: data,
 		};
 
@@ -55,8 +57,8 @@ class GoalService {
 			teamId: teamId!,
 		};
 
-		const message = {
-			event: "GoalUpdated",
+		const message: QueueMessage = {
+			event: EVENTS.GOAL_UPDATED,
 			data: goalData,
 		};
 
@@ -71,9 +73,9 @@ class GoalService {
 		const teamId = await cacheService.getTeamIdFromCache(userId);
 		const goalData = await GoalRepository.findById(id, teamId!);
 
-		const message = {
-			event: "GoalDeleted",
-			data: goalData,
+		const message: QueueMessage = {
+			event: EVENTS.GOAL_DELETED,
+			data: goalData as {},
 		};
 
 		mqConnection.sendToQueue(`team-${teamId}-goal-queue`, message);
