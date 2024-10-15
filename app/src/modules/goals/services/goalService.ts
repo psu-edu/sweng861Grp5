@@ -1,5 +1,5 @@
 import cacheService from "../../../shared/utils/cacheService";
-import { EVENTS } from "../../../shared/utils/enums";
+import { EVENTS, QUEUES } from "../../../shared/utils/enums";
 import { logger } from "../../../shared/utils/logger";
 import mqConnection from "../../../shared/utils/rabbitmq";
 import type { QueueMessage } from "../../../shared/utils/types";
@@ -8,7 +8,9 @@ import GoalRepository from "../repositories/goalRepository";
 
 class GoalService {
 	async createGoal(goalData: Partial<IGoal>, userId: string): Promise<IGoal> {
-		const teamId = await cacheService.getTeamIdFromCache(userId);
+		// const teamId = await cacheService.getTeamIdFromCache(userId);
+		// TODO temp for the demo
+		const teamId = "123";
 		logger.info(`Creating new goal: ${goalData.name} with teamId: ${teamId}`);
 
 		const data = {
@@ -18,14 +20,19 @@ class GoalService {
 			teamId: teamId!,
 		};
 
+		let goal = await GoalRepository.create(data, teamId!);
+
+		goal = goal.toObject();
+
 		const message: QueueMessage = {
 			event: EVENTS.GOAL_CREATED,
-			data: data,
+			data: goal,
 		};
 
-		mqConnection.sendToQueue(`team-${teamId}-goal-queue`, message);
+		// TODO figure out tenet queues
+		mqConnection.sendToQueue(QUEUES.GOALS, message);
 
-		return await GoalRepository.create(data, teamId!);
+		return goal;
 	}
 
 	async getGoalById(id: string, userId: string): Promise<IGoal | null> {

@@ -13,7 +13,7 @@ const router = Router();
  *     tags: [Leaderboard]
  *     description: Retrieve all leaderboard entries for a specific team.
  *     security:
- *       - BearerAuth: []
+ *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: Leaderboard retrieved successfully.

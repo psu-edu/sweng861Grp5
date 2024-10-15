@@ -7,12 +7,6 @@ export const validateGoal = [
 		.notEmpty()
 		.withMessage("Name is required"),
 
-	body("goalInt")
-		.isInt()
-		.withMessage("Goal integer must be a valid integer")
-		.notEmpty()
-		.withMessage("Goal integer is required"),
-
 	body("interval")
 		.isString()
 		.withMessage("Must be a string")

@@ -46,8 +46,6 @@ describe("LeaderboardController", () => {
 			req.userId = "123";
 			sinon.stub(LeaderboardService, "createLeaderboardEntry").resolves({
 				name: "John Doe",
-				score: 23,
-				date: new Date(),
 				userId: "user123",
 				teamId: "team1234",
 			} as ILeaderboardEntry);

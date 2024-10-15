@@ -14,7 +14,7 @@ type VitalUserResponse = {
 
 class VitalService {
 	constructor() {
-		mqConnection.consume(this.handleEvent.bind(this), QUEUES.USER);
+		mqConnection.consume(this.handleEvent.bind(this), QUEUES.USER_CREATED);
 	}
 
 	private async handleEvent(event: { event: string; data: any }) {

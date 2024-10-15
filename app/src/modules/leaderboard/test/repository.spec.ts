@@ -16,9 +16,7 @@ describe("LeaderboardRepository", () => {
 			const mockEntry = {
 				...entryData,
 				teamId,
-				date: new Date(),
 				userId: "user-1",
-				score: 5,
 			};
 
 			sinon.stub(LeaderboardEntry.prototype, "save").resolves(mockEntry);

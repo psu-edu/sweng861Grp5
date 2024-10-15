@@ -1,4 +1,3 @@
-import { Connection } from "mongoose";
 import { logger } from "../../../shared/utils/logger";
 import LeaderboardEntry, {
 	type ILeaderboardEntry,
@@ -17,10 +16,10 @@ class LeaderboardRepository {
 			logger.info(
 				`Creating leaderboard entry with data: ${JSON.stringify(entryData)}`,
 			);
-			const leaderboardEntry = new LeaderboardEntry(entryData);
+			const leaderboardEntry = new LeaderboardEntry(data);
 			const savedLeaderboardEntry = await leaderboardEntry.save();
 			logger.info(
-				`Leaderboard Entry ${LeaderboardEntry.name} added to leaderboard`,
+				`Leaderboard Entry ${savedLeaderboardEntry.name} added to leaderboard`,
 			);
 			return savedLeaderboardEntry;
 		} catch (error: any) {
@@ -59,6 +58,7 @@ class LeaderboardRepository {
 			const entries = await LeaderboardEntry.find({ teamId });
 			if (entries) {
 				logger.info("Entries found");
+				logger.debug(`${JSON.stringify(entries)}`);
 			} else {
 				logger.warn("No entries found for leaderboard");
 			}

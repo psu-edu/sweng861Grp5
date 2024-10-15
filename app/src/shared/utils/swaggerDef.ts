@@ -27,10 +27,6 @@ export const swaggerOptions = (
 								type: "string",
 								example: "Step Count",
 							},
-							goalInt: {
-								type: "integer",
-								example: 10000,
-							},
 							interval: {
 								type: "string",
 								enum: ["daily", "weekly", "monthly"],

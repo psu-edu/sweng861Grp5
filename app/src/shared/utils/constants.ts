@@ -1,7 +1,7 @@
 const USER = process.env.APP_USER;
 const PASS = process.env.APP_PASS;
 const NAME = process.env.MONGO_INITDB_DATABASE;
-const HOST = process.env.DB_HOST || "mongodb";
+const HOST = process.env.DB_HOST || "localhost";
 const PORT = process.env.DB_PORT || "27017";
 
 export const mongo = {
@@ -15,7 +15,7 @@ export const mongo = {
 
 const RMQ_USER = process.env.RABBITMQ_DEFAULT_USER;
 const RMQ_PASS = process.env.RABBITMQ_DEFAULT_PASS;
-const RMQ_HOST = process.env.RABBITMQ_HOST || "rabbitmq";
+const RMQ_HOST = process.env.RABBITMQ_HOST || "localhost";
 const RMQ_PORT = process.env.RABBITMQ_PORT || "5672";
 
 export const rabbit = {

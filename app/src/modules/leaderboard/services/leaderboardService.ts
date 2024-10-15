@@ -42,7 +42,9 @@ class LeaderboardService {
 
 	async getAllLeaderboard(userId: string): Promise<ILeaderboardEntry[] | null> {
 		logger.info("Retrieving user entries");
-		const teamId = await cacheService.getTeamIdFromCache(userId);
+		// const teamId = await cacheService.getTeamIdFromCache(userId);
+		// TODO fixx for demo
+		const teamId = "123";
 		return await LeaderboardRepository.findAll(teamId!);
 	}
 
