@@ -14,6 +14,8 @@ import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import authRoutes from "./modules/auth/routes/authRoutes";
 import goalRoutes from "./modules/goals/routes/goalRoutes";
+import leaderboardRoutes from "./modules/leaderboard/routes/leaderboardRoutes";
+import AsyncLeaderboardService from "./modules/leaderboard/services/asyncLeaderboardService";
 import userRoutes from "./modules/user/routes/userRoutes";
 import AsyncUserService from "./modules/user/service/userAsyncService";
 import vitalRoutes from "./modules/vital/routes/vitalRoutes";
@@ -57,6 +59,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 app.use("/", goalRoutes);
+app.use("/", leaderboardRoutes);
 app.use("/vital", vitalRoutes);
 app.use("/", authRoutes);
 app.use("/", userRoutes);
@@ -74,6 +77,9 @@ connectDB();
 
 	AsyncUserService;
 	logger.info("AsyncUserService started listening to events");
+
+	AsyncLeaderboardService;
+	logger.info("asyncLeaderboardService started listening to events");
 })();
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

@@ -18,7 +18,6 @@ describe("GoalRepository", () => {
 				teamId,
 				createdAt: new Date(),
 				userId: "user-1",
-				goalInt: 5,
 				interval: "weekly",
 			};
 

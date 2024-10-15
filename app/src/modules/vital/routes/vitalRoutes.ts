@@ -29,7 +29,7 @@ const router = Router();
  * @param {Response} res - Express response object
  * @returns {Promise<void>}
  */
-router.get("/token/:id", authenticateJWT, VitalController.getToken);
+router.get("/token/:id", VitalController.getToken);
 
 /**
  * @swagger

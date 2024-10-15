@@ -31,7 +31,7 @@ class UserService {
 				data,
 			};
 
-			await mqConnection.sendToQueue(QUEUES.USER, message);
+			await mqConnection.sendToQueue(QUEUES.USER_CREATED, message);
 		} catch (error) {
 			logger.error(error);
 		}

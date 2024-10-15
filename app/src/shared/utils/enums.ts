@@ -1,5 +1,6 @@
 export enum QUEUES {
 	USER = "user_queue",
+	USER_CREATED = "user_created_queue",
 	VITAL_USER = "vital_user_queue",
 	LEADERBOARD = "leaderboard_queue",
 	GOALS = "goals_queue",

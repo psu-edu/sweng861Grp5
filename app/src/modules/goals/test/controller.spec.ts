@@ -45,7 +45,6 @@ describe("GoalController", () => {
 				name: "Test Goal",
 				createdAt: new Date(),
 				updatedAt: new Date(),
-				goalInt: 10,
 				teamId: "team123",
 				userId: "user123",
 				interval: "weekly",
