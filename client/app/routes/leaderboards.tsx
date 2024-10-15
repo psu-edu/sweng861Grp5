@@ -32,7 +32,6 @@ interface LeaderboardEntry {
   name: string;
   score: number;
   teamId: string; // teamId for filtering
-  date: string;
   userId: string;
 }
 
@@ -95,13 +94,21 @@ const Leaderboards: React.FC = () => {
     users: ["Josh", "Race", "Chad", "Ben"],
   };
 
+  const mockLeaderboard: LeaderboardEntry[] = [
+    { userId: "1", name: "Alice", score: 12000, teamId: "123" },
+    { userId: "2", name: "Bob", score: 10000, teamId: "123" },
+    { userId: "3", name: "Charlie", score: 8000, teamId: "123" },
+    { userId: "4", name: "David", score: 6000, teamId: "123" },
+    { userId: "5", name: "Eve", score: 4000, teamId: "123" },
+  ];
+
   return (
     <main className="">
       <InternalMenu>
         <div className="flex justify-between items-center mb-4">
           {/* Create Goal Button */}
           {leaderboard.length > 0 ? (
-            <Table className="w-full">
+            <Table className="w-[300px]">
               <TableCaption>Team {team.teamName} Steps Leaderboard</TableCaption>
               <TableHeader>
                 <TableRow>
@@ -110,7 +117,7 @@ const Leaderboards: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredLeaderboard.map((entry) => (
+                {mockLeaderboard.map((entry) => (
                   <TableRow key={entry.userId}>
                     <TableCell className="font-medium">{entry.name}</TableCell>
                     <TableCell className="text-right">{entry.score}</TableCell>
